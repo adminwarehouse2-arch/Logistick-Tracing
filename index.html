@@ -3,167 +3,915 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Pengiriman Driver</title>
+  <title>Logistics Tracing & Driver Report - Green Rebel</title>
   <style>
+    :root {
+      --navy-dark: #1b2259;
+      --navy-header: #252e75;
+      --gold: #f5a623;
+      --bg-page: #f0f2f8;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --blue-btn: #2563eb;
+      --green: #10b981;
+      --red: #ef4444;
+    }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #f4f6f9; margin: 0; padding: 16px; color: #333; }
-    .container { max-width: 480px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    h2 { margin-top: 0; text-align: center; color: #1a73e8; font-size: 20px; }
-    .form-group { margin-bottom: 16px; }
-    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #444; }
-    input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #fff; }
-    input:focus, select:focus { outline: none; border-color: #1a73e8; }
-    button { width: 100%; padding: 14px; background-color: #1a73e8; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
-    button:disabled { background-color: #9bbcf0; cursor: not-allowed; }
-    .status-msg { margin-top: 14px; text-align: center; font-weight: 600; font-size: 14px; }
-    .success { color: #0f9d58; }
-    .error { color: #d93025; }
+    body { margin: 0; background-color: var(--bg-page); color: var(--text-main); }
+
+    /* TOP NAVBAR */
+    .navbar {
+      background: linear-gradient(90deg, var(--navy-dark) 0%, var(--navy-header) 100%);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { font-size: 24px; }
+    .brand-title { font-weight: 700; font-size: 16px; line-height: 1.2; }
+    .brand-sub { font-size: 11px; color: #cbd5e1; }
+
+    .nav-tabs { display: flex; gap: 8px; }
+    .nav-btn {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background: var(--gold);
+      color: var(--navy-dark);
+      border-color: var(--gold);
+    }
+
+    .sync-btn {
+      background: var(--gold);
+      color: var(--navy-dark);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sync-btn:disabled { opacity: 0.7; cursor: wait; }
+
+    /* CONTAINER */
+    .main-container { max-width: 1350px; margin: 20px auto; padding: 0 16px; }
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* ================= HALAMAN 1: FORM PENGINPUTAN ================= */
+    .form-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+    .form-card h2 { margin-top: 0; text-align: center; color: var(--navy-dark); font-size: 19px; }
+    .gps-banner {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: var(--navy-dark);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .gps-btn {
+      background: var(--navy-header);
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #334155; }
+    input, select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+    }
+    input:focus, select:focus { outline: none; border-color: var(--navy-header); }
+
+    /* TOMBOL KAMERA & GALERI */
+    .photo-picker-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .btn-photo-opt {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: var(--navy-dark);
+      transition: all 0.15s;
+    }
+    .btn-photo-opt:hover { background: #eef2ff; border-color: var(--navy-header); }
+    .btn-camera { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .btn-camera:hover { background: #d1fae5; }
+    .preview-box {
+      margin-top: 8px;
+      display: none;
+      text-align: center;
+      background: #f8fafc;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .preview-caption { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 4px; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--blue-btn);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .submit-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+    .status-msg { margin-top: 12px; text-align: center; font-weight: 600; font-size: 13px; }
+    .success { color: var(--green); }
+    .error { color: var(--red); }
+
+    /* ================= HALAMAN 2: MATRIX REVIEW PENGIRIMAN ================= */
+    .filter-bar {
+      background: #fff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .filter-title h3 { margin: 0; font-size: 16px; color: var(--navy-dark); }
+    .filter-title p { margin: 3px 0 0; font-size: 12px; color: var(--text-muted); }
+    .filter-controls { display: flex; gap: 10px; align-items: center; }
+    .filter-controls select { width: auto; padding: 8px 12px; font-weight: 600; }
+
+    .week-block {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .week-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+    }
+    .day-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+    .day-header {
+      background: var(--navy-dark);
+      color: #fff;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .date-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+    .day-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+    .route-pill {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .route-pill:hover {
+      border-color: var(--navy-header);
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+    .route-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+    .route-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .route-meta { font-size: 11px; color: var(--text-muted); }
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .st-terkirim { background: #dcfce7; color: #166534; }
+    .st-pending { background: #fef3c7; color: #92400e; }
+    .st-cancel, .st-retur { background: #fee2e2; color: #991b1b; }
+    .empty-day { text-align: center; font-size: 12px; color: #94a3b8; padding: 14px 0; }
+
+    /* ================= MODAL DETAIL & EDIT ================= */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .modal-header h3 { margin: 0; font-size: 17px; color: var(--navy-dark); }
+    .close-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b; }
+    .photo-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .photo-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .photo-box a {
+      display: inline-block;
+      margin-top: 4px;
+      color: var(--blue-btn);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-save-edit { flex: 1; background: var(--green); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .btn-cancel-edit { background: #e2e8f0; color: #334155; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>🚚 Laporan Pengiriman Driver</h2>
-  <form id="driverForm">
-    
-    <div class="form-group">
-      <label for="tanggal">Tanggal</label>
-      <input type="date" id="tanggal" required>
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-icon">🚚</div>
+      <div>
+        <div class="brand-title">Green Rebel Logistics & Tracing</div>
+        <div class="brand-sub">Sistem Laporan & Monitoring Pengiriman Driver</div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-btn active" id="tabBtn1" onclick="switchPage('page1')">1. Form Penginputan</button>
+      <button class="nav-btn" id="tabBtn2" onclick="switchPage('page2')">2. Review Hasil Pengiriman</button>
+    </div>
+    <button class="sync-btn" id="syncBtn" onclick="loadAllData()">🔄 Sync Data</button>
+  </div>
+
+  <div class="main-container">
+
+    <!-- ================= HALAMAN 1: FORM INPUT ================= -->
+    <div id="page1" class="page-section active">
+      <div class="form-card">
+        <h2>📋 Form Laporan Pengiriman Driver</h2>
+
+        <!-- STATUS GPS UNTUK WATERMARK FOTO -->
+        <div class="gps-banner">
+          <span id="gpsStatusText">📍 Mendeteksi lokasi GPS untuk stempel foto...</span>
+          <button type="button" class="gps-btn" onclick="detectLocation()">Refresh GPS</button>
+        </div>
+
+        <form id="driverForm">
+          <div class="form-group">
+            <label for="tanggal">Tanggal</label>
+            <input type="date" id="tanggal" required>
+          </div>
+          <div class="form-group">
+            <label for="rute">Rute (Customer / Tujuan)</label>
+            <select id="rute" required>
+              <option value="">Memuat daftar rute...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eta">ETA (Jam Tiba)</label>
+            <input type="time" id="eta" required>
+          </div>
+
+          <!-- FOTO TEMPAT (KAMERA / GALERI + WATERMARK) -->
+          <div class="form-group">
+            <label>Foto Tempat</label>
+            <div class="photo-picker-group">
+              <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camTempat').click()">📷 Ambil Foto</button>
+              <button type="button" class="btn-photo-opt" onclick="document.getElementById('galTempat').click()">🖼️ Pilih Galeri</button>
+            </div>
+            <input type="file" id="camTempat" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoSelect(this, 'tempat')">
+            <input type="file" id="galTempat" accept="image/*" style="display:none" onchange="handlePhotoSelect(this, 'tempat')">
+            <div class="preview-box" id="prevBoxTempat">
+              <img id="prevImgTempat" src="" alt="Preview Foto Tempat">
+              <div class="preview-caption">✅ Stempel Green Rebel, Jam & Lokasi terpasang</div>
+            </div>
+          </div>
+
+          <!-- FOTO PRODUK (KAMERA / GALERI + WATERMARK) -->
+          <div class="form-group">
+            <label>Foto Produk</label>
+            <div class="photo-picker-group">
+              <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camProduk').click()">📷 Ambil Foto</button>
+              <button type="button" class="btn-photo-opt" onclick="document.getElementById('galProduk').click()">🖼️ Pilih Galeri</button>
+            </div>
+            <input type="file" id="camProduk" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoSelect(this, 'produk')">
+            <input type="file" id="galProduk" accept="image/*" style="display:none" onchange="handlePhotoSelect(this, 'produk')">
+            <div class="preview-box" id="prevBoxProduk">
+              <img id="prevImgProduk" src="" alt="Preview Foto Produk">
+              <div class="preview-caption">✅ Stempel Green Rebel, Jam & Lokasi terpasang</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="etd">ETD (Jam Berangkat / Selesai)</label>
+            <input type="time" id="etd" required>
+          </div>
+          <div class="form-group">
+            <label for="suhu">Suhu (°C)</label>
+            <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C" required>
+          </div>
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="">-- Pilih Status --</option>
+              <option value="Terkirim">Terkirim</option>
+              <option value="Pending">Pending</option>
+              <option value="Cancel">Cancel</option>
+              <option value="Retur">Retur</option>
+            </select>
+          </div>
+          <button type="submit" class="submit-btn" id="submitBtn">Kirim Laporan</button>
+          <div id="msg" class="status-msg"></div>
+        </form>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="rute">Rute (Customer / Tujuan)</label>
-      <select id="rute" required>
-        <option value="">Memuat daftar rute...</option>
-      </select>
+    <!-- ================= HALAMAN 2: MATRIX REVIEW & EDIT ================= -->
+    <div id="page2" class="page-section">
+      <div class="filter-bar">
+        <div class="filter-title">
+          <h3>📅 MATRIX REVIEW PENGIRIMAN BULANAN</h3>
+          <p>Klik pada item Rute / Customer untuk melihat detail foto & edit data langsung ke Google Sheets</p>
+        </div>
+        <div class="filter-controls">
+          <label style="margin:0;">Bulan:</label>
+          <select id="filterBulan" onchange="renderMatrix()">
+            <option value="0">Januari</option>
+            <option value="1">Februari</option>
+            <option value="2">Maret</option>
+            <option value="3">April</option>
+            <option value="4">Mei</option>
+            <option value="5">Juni</option>
+            <option value="6">Juli</option>
+            <option value="7">Agustus</option>
+            <option value="8">September</option>
+            <option value="9">Oktober</option>
+            <option value="10">November</option>
+            <option value="11">Desember</option>
+          </select>
+          <label style="margin:0;">Tahun:</label>
+          <select id="filterTahun" onchange="renderMatrix()">
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="matrixContainer">
+        <div style="text-align:center; padding:40px; color:#64748b;">Memuat data dari Google Sheets...</div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="eta">ETA (Jam Tiba)</label>
-      <input type="time" id="eta" required>
-    </div>
+  </div>
 
-    <div class="form-group">
-      <label for="fotoTempat">Foto Tempat</label>
-      <input type="file" id="fotoTempat" accept="image/*" capture="environment" required>
-    </div>
+  <!-- ================= MODAL DETAIL & EDIT DATA ================= -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🔍 Detail & Edit Data Pengiriman</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editForm">
+        <input type="hidden" id="editRowIndex">
+        
+        <div class="photo-links">
+          <div class="photo-box">
+            <div>📸 <strong>Foto Tempat</strong></div>
+            <a id="linkFotoTempat" href="#" target="_blank">Buka Foto ↗</a>
+          </div>
+          <div class="photo-box">
+            <div>📦 <strong>Foto Produk</strong></div>
+            <a id="linkFotoProduk" href="#" target="_blank">Buka Foto ↗</a>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <label for="fotoProduk">Foto Produk</label>
-      <input type="file" id="fotoProduk" accept="image/*" capture="environment" required>
-    </div>
+        <div class="form-group">
+          <label>Tanggal</label>
+          <input type="date" id="editTanggal" required>
+        </div>
+        <div class="form-group">
+          <label>Rute (Customer / Tujuan)</label>
+          <select id="editRute" required></select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label>ETA (Jam Tiba)</label>
+            <input type="time" id="editEta" required>
+          </div>
+          <div class="form-group">
+            <label>ETD (Jam Selesai)</label>
+            <input type="time" id="editEtd" required>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label>Suhu (°C)</label>
+            <input type="text" id="editSuhu" required>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="editStatus" required>
+              <option value="Terkirim">Terkirim</option>
+              <option value="Pending">Pending</option>
+              <option value="Cancel">Cancel</option>
+              <option value="Retur">Retur</option>
+            </select>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <label for="etd">ETD (Jam Berangkat / Selesai)</label>
-      <input type="time" id="etd" required>
+        <div id="editMsg" class="status-msg"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel-edit" onclick="closeModal()">Tutup</button>
+          <button type="submit" class="btn-save-edit" id="saveEditBtn">💾 Simpan Perubahan ke Sheets</button>
+        </div>
+      </form>
     </div>
-
-    <div class="form-group">
-      <label for="suhu">Suhu (°C)</label>
-      <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C" required>
-    </div>
-
-    <div class="form-group">
-      <label for="status">Status</label>
-      <select id="status" required>
-        <option value="">-- Pilih Status --</option>
-        <option value="Terkirim">Terkirim</option>
-        <option value="Pending">Pending</option>
-        <option value="Cancel">Cancel</option>
-        <option value="Retur">Retur</option>
-      </select>
-    </div>
-
-    <button type="submit" id="submitBtn">Kirim Laporan</button>
-    <div id="msg" class="status-msg"></div>
-  </form>
-</div>
+  </div>
 
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJVXvi6XmTqsYugyyniEVi3UdGbBnOR5jtQyerhqMRI2weOmISSeUFcokfQzTp6zEp/exec';
 
-  // Otomatis isi tanggal hari ini
-  document.getElementById('tanggal').valueAsDate = new Date();
+  let allRoutes = [];
+  let allDeliveries = [];
+  let base64FotoTempat = '';
+  let base64FotoProduk = '';
+  let currentLocationText = 'Mencari koordinat GPS...';
 
-  // Ambil daftar rute unik dari tab Routing Kolom C
-  window.addEventListener('DOMContentLoaded', async () => {
-    const selectRute = document.getElementById('rute');
+  // Set default tanggal & filter bulan/tahun sekarang
+  const today = new Date();
+  document.getElementById('tanggal').valueAsDate = today;
+  document.getElementById('filterBulan').value = today.getMonth();
+  document.getElementById('filterTahun').value = today.getFullYear();
+
+  // ================= DETEKSI LOKASI GPS & NAMA ALAMAT =================
+  function detectLocation() {
+    const gpsLabel = document.getElementById('gpsStatusText');
+    gpsLabel.textContent = '📍 Mendeteksi lokasi GPS...';
+
+    if (!navigator.geolocation) {
+      currentLocationText = 'GPS tidak didukung perangkat';
+      gpsLabel.textContent = '⚠️ ' + currentLocationText;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude.toFixed(6);
+        const lon = pos.coords.longitude.toFixed(6);
+        currentLocationText = `Lat: ${lat}, Lng: ${lon}`;
+        gpsLabel.textContent = `✅ Lokasi aktif: ${lat}, ${lon}`;
+
+        // Ambil nama jalan/kecamatan secara otomatis (Reverse Geocoding gratis)
+        try {
+          const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16`);
+          const geo = await resp.json();
+          if (geo && geo.display_name) {
+            const shortAddr = geo.display_name.split(',').slice(0, 3).join(',');
+            currentLocationText = `${shortAddr} (${lat}, ${lon})`;
+            gpsLabel.textContent = `✅ Lokasi: ${shortAddr}`;
+          }
+        } catch (e) {
+          // Tetap gunakan koordinat Lat/Lng jika gagal ambil nama jalan
+        }
+      },
+      (err) => {
+        currentLocationText = 'Lokasi GPS tidak diizinkan / mati';
+        gpsLabel.textContent = '⚠️ Aktifkan izin Lokasi/GPS di browser';
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  // ================= PROSES FOTO + WATERMARK GREEN REBEL, JAM & LOKASI =================
+  function handlePhotoSelect(inputEl, type) {
+    const file = inputEl.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxWidth = 900;
+        const scaleSize = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * scaleSize;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Waktu & Tanggal real-time saat foto diambil/dipilih
+        const now = new Date();
+        const tglStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+        const jamStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+        const ruteVal = document.getElementById('rute').value;
+
+        // Gambar kotak latar gelap transparan di bagian bawah foto
+        const barHeight = 96;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+        ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
+
+        // Garis aksen hijau khas Green Rebel di sisi kiri stempel
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(0, canvas.height - barHeight, 10, barHeight);
+
+        // Teks Baris 1: GREEN REBEL LOGISTICS
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText('🌱 GREEN REBEL LOGISTICS', 22, canvas.height - 64);
+
+        // Teks Baris 2: Tanggal & Jam + Rute
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 15px sans-serif';
+        const line2 = `🕒 ${tglStr} • ${jamStr}` + (ruteVal ? ` | 📍 Tujuan: ${ruteVal}` : '');
+        ctx.fillText(line2, 22, canvas.height - 39);
+
+        // Teks Baris 3: Lokasi GPS saat foto
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '13px sans-serif';
+        const locDisplay = `📌 ${currentLocationText}`;
+        ctx.fillText(locDisplay.substring(0, 88), 22, canvas.height - 16);
+
+        const stampedBase64 = canvas.toDataURL('image/jpeg', 0.78);
+
+        if (type === 'tempat') {
+          base64FotoTempat = stampedBase64;
+          document.getElementById('prevImgTempat').src = stampedBase64;
+          document.getElementById('prevBoxTempat').style.display = 'block';
+        } else {
+          base64FotoProduk = stampedBase64;
+          document.getElementById('prevImgProduk').src = stampedBase64;
+          document.getElementById('prevBoxProduk').style.display = 'block';
+        }
+      };
+    };
+  }
+
+  // Navigasi antar Halaman 1 dan Halaman 2
+  function switchPage(pageId) {
+    document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    
+    if (pageId === 'page1') document.getElementById('tabBtn1').classList.add('active');
+    if (pageId === 'page2') {
+      document.getElementById('tabBtn2').classList.add('active');
+      renderMatrix();
+    }
+  }
+
+  // Ambil data Rute & Data Pengiriman dari Google Sheets
+  async function loadAllData() {
+    const syncBtn = document.getElementById('syncBtn');
+    syncBtn.disabled = true;
+    syncBtn.textContent = '⏳ Syncing...';
+
     try {
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
-      selectRute.innerHTML = '<option value="">-- Pilih Rute --</option>';
-      data.routes.forEach(rute => {
-        const opt = document.createElement('option');
-        opt.value = rute;
-        opt.textContent = rute;
-        selectRute.appendChild(opt);
-      });
-    } catch (err) {
-      selectRute.innerHTML = '<option value="">Gagal memuat rute (Cek URL Script)</option>';
-    }
-  });
+      
+      allRoutes = data.routes || [];
+      allDeliveries = data.deliveries || [];
 
-  // Kompres foto agar upload cepat di HP driver
-  function compressImage(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxWidth = 800;
-          const scaleSize = maxWidth / img.width;
-          canvas.width = maxWidth;
-          canvas.height = img.height * scaleSize;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', 0.7));
-        };
-      };
+      populateRouteDropdowns();
+      renderMatrix();
+    } catch (err) {
+      alert('Gagal mengambil data dari Google Sheets. Pastikan Apps Script sudah di-deploy ulang.');
+    } finally {
+      syncBtn.disabled = false;
+      syncBtn.textContent = '🔄 Sync Data';
+    }
+  }
+
+  function populateRouteDropdowns() {
+    const select1 = document.getElementById('rute');
+    const selectEdit = document.getElementById('editRute');
+    
+    select1.innerHTML = '<option value="">-- Pilih Rute --</option>';
+    selectEdit.innerHTML = '<option value="">-- Pilih Rute --</option>';
+
+    allRoutes.forEach(r => {
+      select1.add(new Option(r, r));
+      selectEdit.add(new Option(r, r));
     });
   }
 
-  // Kirim data saat tombol ditekan
+  // Render Kalender Mingguan di Halaman 2
+  function renderMatrix() {
+    const container = document.getElementById('matrixContainer');
+    const month = parseInt(document.getElementById('filterBulan').value);
+    const year = parseInt(document.getElementById('filterTahun').value);
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const namaHari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+
+    let weeks = [[]];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateObj = new Date(year, month, d);
+      if (d > 1 && dateObj.getDay() === 1) {
+        weeks.push([]);
+      }
+      weeks[weeks.length - 1].push(dateObj);
+    }
+
+    let html = '';
+    weeks.forEach((weekDates, idx) => {
+      html += `<div class="week-block">
+        <div class="week-header">📅 Minggu ke-${idx + 1}</div>
+        <div class="days-grid">`;
+
+      weekDates.forEach(dateObj => {
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const dateStr = `${yyyy}-${mm}-${dd}`;
+        const dayName = namaHari[dateObj.getDay()];
+
+        const items = allDeliveries.filter(item => item.tanggal === dateStr);
+
+        html += `<div class="day-card">
+          <div class="day-header">
+            <span>${dayName}</span>
+            <span class="date-badge">${dd}/${mm}</span>
+          </div>
+          <div class="day-body">`;
+
+        if (items.length === 0) {
+          html += `<div class="empty-day">Belum ada pengiriman</div>`;
+        } else {
+          items.forEach(item => {
+            const stClass = 'st-' + (item.status || '').toLowerCase();
+            html += `<div class="route-pill" onclick="openDetailModal(${item.rowIndex})">
+              <div class="route-info">
+                <div class="route-name" title="${item.rute}">🚚 ${item.rute}</div>
+                <div class="route-meta">ETA: ${item.eta || '-'} | ETD: ${item.etd || '-'} | ${item.suhu || '-'}</div>
+              </div>
+              <span class="status-badge ${stClass}">${item.status || '-'}</span>
+            </div>`;
+          });
+        }
+
+        html += `</div></div>`;
+      });
+
+      html += `</div></div>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Buka Modal Detail & Edit saat item diklik
+  function openDetailModal(rowIndex) {
+    const item = allDeliveries.find(d => d.rowIndex === rowIndex);
+    if (!item) return;
+
+    document.getElementById('editRowIndex').value = item.rowIndex;
+    document.getElementById('editTanggal').value = item.tanggal;
+    
+    const editRuteSelect = document.getElementById('editRute');
+    if (![...editRuteSelect.options].some(o => o.value === item.rute)) {
+      editRuteSelect.add(new Option(item.rute, item.rute));
+    }
+    editRuteSelect.value = item.rute;
+
+    document.getElementById('editEta').value = item.eta;
+    document.getElementById('editEtd').value = item.etd;
+    document.getElementById('editSuhu').value = item.suhu;
+    document.getElementById('editStatus').value = item.status;
+
+    const linkTempat = document.getElementById('linkFotoTempat');
+    if (item.fotoTempat && item.fotoTempat.startsWith('http')) {
+      linkTempat.href = item.fotoTempat;
+      linkTempat.textContent = 'Lihat Foto Tempat ↗';
+    } else {
+      linkTempat.href = '#';
+      linkTempat.textContent = 'Tidak ada foto';
+    }
+
+    const linkProduk = document.getElementById('linkFotoProduk');
+    if (item.fotoProduk && item.fotoProduk.startsWith('http')) {
+      linkProduk.href = item.fotoProduk;
+      linkProduk.textContent = 'Lihat Foto Produk ↗';
+    } else {
+      linkProduk.href = '#';
+      linkProduk.textContent = 'Tidak ada foto';
+    }
+
+    document.getElementById('editMsg').textContent = '';
+    document.getElementById('detailModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('detailModal').classList.remove('open');
+  }
+
+  // Simpan hasil Edit dari Halaman 2 ke Google Sheets
+  document.getElementById('editForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('saveEditBtn');
+    const msg = document.getElementById('editMsg');
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+
+    const payload = {
+      action: 'update',
+      rowIndex: parseInt(document.getElementById('editRowIndex').value),
+      tanggal: document.getElementById('editTanggal').value,
+      rute: document.getElementById('editRute').value,
+      eta: document.getElementById('editEta').value,
+      etd: document.getElementById('editEtd').value,
+      suhu: document.getElementById('editSuhu').value,
+      status: document.getElementById('editStatus').value
+    };
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.status === 'success') {
+        msg.className = 'status-msg success';
+        msg.textContent = '✅ Data berhasil diperbarui di Google Sheets!';
+        await loadAllData();
+        setTimeout(closeModal, 800);
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (err) {
+      msg.className = 'status-msg error';
+      msg.textContent = '❌ Gagal update: ' + err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 Simpan Perubahan ke Sheets';
+    }
+  });
+
+  // Kirim Laporan Baru dari Halaman 1
   document.getElementById('driverForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     const msg = document.getElementById('msg');
-    
+
+    if (!base64FotoTempat || !base64FotoProduk) {
+      msg.className = 'status-msg error';
+      msg.textContent = '⚠️ Harap ambil/pilih Foto Tempat dan Foto Produk terlebih dahulu!';
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Mengirim data & foto...';
     msg.textContent = '';
 
     try {
-      const fileTempat = document.getElementById('fotoTempat').files[0];
-      const fileProduk = document.getElementById('fotoProduk').files[0];
-
-      const base64Tempat = await compressImage(fileTempat);
-      const base64Produk = await compressImage(fileProduk);
-
       const payload = {
+        action: 'create',
         tanggal: document.getElementById('tanggal').value,
         rute: document.getElementById('rute').value,
         eta: document.getElementById('eta').value,
-        fotoTempat: base64Tempat,
-        fotoProduk: base64Produk,
+        fotoTempat: base64FotoTempat,
+        fotoProduk: base64FotoProduk,
         etd: document.getElementById('etd').value,
         suhu: document.getElementById('suhu').value,
         status: document.getElementById('status').value
       };
 
-      const response = await fetch(SCRIPT_URL, {
+      const res = await fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify(payload)
       });
-      const result = await response.json();
+      const result = await res.json();
 
       if (result.status === 'success') {
         msg.className = 'status-msg success';
         msg.textContent = '✅ Laporan berhasil masuk ke Sheets!';
         document.getElementById('driverForm').reset();
         document.getElementById('tanggal').valueAsDate = new Date();
+        base64FotoTempat = '';
+        base64FotoProduk = '';
+        document.getElementById('prevBoxTempat').style.display = 'none';
+        document.getElementById('prevBoxProduk').style.display = 'none';
+        await loadAllData();
       } else {
         throw new Error(result.message);
       }
@@ -174,6 +922,12 @@
       btn.disabled = false;
       btn.textContent = 'Kirim Laporan';
     }
+  });
+
+  // Jalankan saat halaman dibuka
+  window.addEventListener('DOMContentLoaded', () => {
+    detectLocation();
+    loadAllData();
   });
 </script>
 
