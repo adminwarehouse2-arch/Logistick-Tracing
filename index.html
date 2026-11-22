@@ -404,10 +404,17 @@
       text-overflow: ellipsis;
     }
     .route-meta { font-size: 10.5px; color: var(--text-muted); }
+    .status-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+    }
     .status-badge {
       font-size: 10px;
       font-weight: 700;
-      padding: 3px 7px;
+      padding: 2px 7px;
       border-radius: 10px;
       white-space: nowrap;
     }
@@ -628,7 +635,7 @@
             </select>
           </div>
 
-          <!-- FORM KHUSUS GRAND MAX (OPSIONAL SAAT BERANGKAT, BISA DILENGKAPI DI HALAMAN 2) -->
+          <!-- FORM KHUSUS GRAND MAX -->
           <div id="grandMaxBox" class="grandmax-box">
             <div class="grandmax-title">🚐 Form Operasional Grand Max <span class="opt-tag">(Bisa diisi bertahap)</span></div>
             
@@ -688,7 +695,7 @@
             </div>
           </div>
 
-          <!-- BAGIAN DI BAWAH INI TIDAK WAJIB DIISI SAAT AWAL (BISA DILENGKAPI DI HALAMAN 2) -->
+          <!-- BAGIAN DI BAWAH INI TIDAK WAJIB DIISI SAAT AWAL -->
           <div class="form-group">
             <label>Foto Tempat <span class="opt-tag">(Opsional di awal, bisa diisi di Halaman 2)</span></label>
             <div class="photo-picker-group">
@@ -731,23 +738,35 @@
             <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C">
           </div>
 
-          <div class="form-group">
-            <label for="status">Status <span class="opt-tag">(Opsional di awal)</span></label>
-            <select id="status" onchange="toggleExtraStatusForm()">
-              <option value="">-- Pilih Status --</option>
-              <option value="Terkirim">Terkirim</option>
-              <option value="Pending">Pending</option>
-              <option value="Cancel">Cancel</option>
-              <option value="Retur">Retur</option>
-            </select>
+          <div class="grid-2col">
+            <div class="form-group">
+              <label for="status">Status 1 <span class="opt-tag">(Utama)</span></label>
+              <select id="status" onchange="toggleExtraStatusForm()">
+                <option value="">-- Pilih Status 1 --</option>
+                <option value="Terkirim">Terkirim</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancel">Cancel</option>
+                <option value="Retur">Retur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="status2">Status 2 <span class="opt-tag">(Parsial / Tambahan)</span></label>
+              <select id="status2" onchange="toggleExtraStatusForm()">
+                <option value="">-- Pilih Status 2 --</option>
+                <option value="Terkirim">Terkirim</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancel">Cancel</option>
+                <option value="Retur">Retur</option>
+              </select>
+            </div>
           </div>
 
-          <!-- FORM TAMBAHAN MUNCUL OTOMATIS JIKA PENDING / CANCEL / RETUR -->
+          <!-- FORM TAMBAHAN MUNCUL OTOMATIS JIKA STATUS 1 ATAU STATUS 2 ADA PENDING / CANCEL / RETUR -->
           <div id="extraStatusBox" class="extra-status-box">
             <div class="extra-status-title">⚠️ Detail Status Pengiriman (Pending / Cancel / Retur)</div>
             
             <div class="form-group">
-              <label for="extraStatus">Status</label>
+              <label for="extraStatus">Status Kendala</label>
               <input type="text" id="extraStatus" readonly>
             </div>
 
@@ -788,7 +807,7 @@
       <div class="filter-bar">
         <div class="filter-title">
           <h3>📅 MATRIX REVIEW PENGIRIMAN BULANAN (PER ARMADA)</h3>
-          <p>Klik pada item Customer untuk melengkapi foto di tempat, jam ETD, suhu, status, maupun data Grand Max</p>
+          <p>Klik pada item Customer untuk melengkapi foto di tempat, jam ETD, suhu, Status 1 & Status 2, maupun data Grand Max</p>
         </div>
         <div class="filter-controls">
           <label style="margin:0;">Bulan:</label>
@@ -820,7 +839,7 @@
 
   </div>
 
-  <!-- ================= MODAL DETAIL & EDIT DATA (LENGKAP & BERJALAN) ================= -->
+  <!-- ================= MODAL DETAIL & EDIT DATA ================= -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -837,7 +856,6 @@
           <div class="photo-card-edit" id="cardEditTempat">
             <div class="photo-card-title">📸 Foto Tempat</div>
             
-            <!-- Tampilan jika BELUM ada foto (Format seperti Halaman 1) -->
             <div id="editUploadTempatWrap">
               <div class="photo-picker-group">
                 <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamTempat').click()">📷 Kamera</button>
@@ -845,7 +863,6 @@
               </div>
             </div>
 
-            <!-- Tampilan jika SUDAH ada foto (Bisa Lihat Foto & Ganti Foto jika salah) -->
             <div id="editExistingTempatWrap" style="display:none;">
               <button type="button" class="btn-view-photo" onclick="openPhotoPopup('tempat')">👁️ Lihat Foto</button>
               <div class="photo-picker-group" style="margin-top:6px;">
@@ -866,7 +883,6 @@
           <div class="photo-card-edit" id="cardEditProduk">
             <div class="photo-card-title">📦 Foto Produk</div>
             
-            <!-- Tampilan jika BELUM ada foto (Format seperti Halaman 1) -->
             <div id="editUploadProdukWrap">
               <div class="photo-picker-group">
                 <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamProduk').click()">📷 Kamera</button>
@@ -874,7 +890,6 @@
               </div>
             </div>
 
-            <!-- Tampilan jika SUDAH ada foto (Bisa Lihat Foto & Ganti Foto jika salah) -->
             <div id="editExistingProdukWrap" style="display:none;">
               <button type="button" class="btn-view-photo" onclick="openPhotoPopup('produk')">👁️ Lihat Foto</button>
               <div class="photo-picker-group" style="margin-top:6px;">
@@ -974,15 +989,27 @@
             </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <label>Suhu (°C)</label>
+          <input type="text" id="editSuhu" placeholder="Contoh: -18°C">
+        </div>
+
         <div class="grid-2col">
           <div class="form-group">
-            <label>Suhu (°C)</label>
-            <input type="text" id="editSuhu" placeholder="Contoh: -18°C">
+            <label>Status 1 <span class="opt-tag">(Utama)</span></label>
+            <select id="editStatus" onchange="toggleEditExtraStatusForm()">
+              <option value="">-- Pilih Status 1 --</option>
+              <option value="Terkirim">Terkirim</option>
+              <option value="Pending">Pending</option>
+              <option value="Cancel">Cancel</option>
+              <option value="Retur">Retur</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>Status</label>
-            <select id="editStatus" onchange="toggleEditExtraStatusForm()">
-              <option value="">-- Pilih Status --</option>
+            <label>Status 2 <span class="opt-tag">(Parsial / Tambahan)</span></label>
+            <select id="editStatus2" onchange="toggleEditExtraStatusForm()">
+              <option value="">-- Pilih Status 2 --</option>
               <option value="Terkirim">Terkirim</option>
               <option value="Pending">Pending</option>
               <option value="Cancel">Cancel</option>
@@ -996,7 +1023,7 @@
           <div class="extra-status-title">⚠️ Detail Status Pengiriman (Pending / Cancel / Retur)</div>
           
           <div class="form-group">
-            <label>Status</label>
+            <label>Status Kendala</label>
             <input type="text" id="editExtraStatus" readonly>
           </div>
           <div class="form-group">
@@ -1049,7 +1076,7 @@
 
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJVXvi6XmTqsYugyyniEVi3UdGbBnOR5jtQyerhqMRI2weOmISSeUFcokfQzTp6zEp/exec';
-  const CACHE_KEY = 'gr_logistics_cache_v3';
+  const CACHE_KEY = 'gr_logistics_cache_v4';
 
   let allRoutes = [];
   let allArmadas = [];
@@ -1183,13 +1210,23 @@
     document.getElementById('gmTotal').value = bensin + tol + parkir;
   }
 
-  function toggleExtraStatusForm() {
-    const statusVal = document.getElementById('status').value;
-    const extraBox = document.getElementById('extraStatusBox');
+  function getKendalaLabel(st1, st2) {
+    const kendalaList = ['Pending', 'Cancel', 'Retur'];
+    const found = [];
+    if (kendalaList.includes(st1)) found.push(st1);
+    if (kendalaList.includes(st2) && !found.includes(st2)) found.push(st2);
+    return found.join(' / ');
+  }
 
-    if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
+  function toggleExtraStatusForm() {
+    const st1 = document.getElementById('status').value;
+    const st2 = document.getElementById('status2').value;
+    const extraBox = document.getElementById('extraStatusBox');
+    const kendalaText = getKendalaLabel(st1, st2);
+
+    if (kendalaText) {
       extraBox.classList.add('show');
-      document.getElementById('extraStatus').value = statusVal;
+      document.getElementById('extraStatus').value = kendalaText;
       syncDynamicForms();
     } else {
       extraBox.classList.remove('show');
@@ -1481,17 +1518,25 @@
 
             armItems.forEach(item => {
               const isTemp = String(item.rowIndex).startsWith('temp_');
-              const rawStatus = (item.status || '').trim();
-              const stClass = isTemp ? 'st-syncing' : (rawStatus ? ('st-' + rawStatus.toLowerCase()) : 'st-jalan');
-              const stText = isTemp ? '⏳ Mengirim...' : (rawStatus || 'Berjalan');
+              const rawStatus1 = (item.status || '').trim();
+              const rawStatus2 = (item.status2 || '').trim();
+
+              const stClass1 = isTemp ? 'st-syncing' : (rawStatus1 ? ('st-' + rawStatus1.toLowerCase()) : 'st-jalan');
+              const stText1 = isTemp ? '⏳ Mengirim...' : (rawStatus1 || 'Berjalan');
               const clickAttr = isTemp ? '' : `onclick="openDetailModal(${item.rowIndex})"`;
+
+              let badgeHtml = `<span class="status-badge ${stClass1}">${stText1}</span>`;
+              if (!isTemp && rawStatus2) {
+                const stClass2 = 'st-' + rawStatus2.toLowerCase();
+                badgeHtml += `<span class="status-badge ${stClass2}">2: ${rawStatus2}</span>`;
+              }
 
               html += `<div class="route-pill" ${clickAttr}>
                 <div class="route-info">
                   <div class="route-name" title="${item.rute}">${item.rute}</div>
                   <div class="route-meta">ETA: ${item.eta || '-'} | ETD: ${item.etd || '-'} | ${item.suhu || '-'}</div>
                 </div>
-                <span class="status-badge ${stClass}">${stText}</span>
+                <div class="status-stack">${badgeHtml}</div>
               </div>`;
             });
 
@@ -1537,11 +1582,14 @@
   }
 
   function toggleEditExtraStatusForm() {
-    const statusVal = document.getElementById('editStatus').value;
+    const st1 = document.getElementById('editStatus').value;
+    const st2 = document.getElementById('editStatus2').value;
     const extraBox = document.getElementById('editExtraStatusBox');
-    if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
+    const kendalaText = getKendalaLabel(st1, st2);
+
+    if (kendalaText) {
       extraBox.classList.add('show');
-      document.getElementById('editExtraStatus').value = statusVal;
+      document.getElementById('editExtraStatus').value = kendalaText;
       syncEditDynamicForms();
     } else {
       extraBox.classList.remove('show');
@@ -1576,6 +1624,7 @@
     set24Time('editEtdHour', 'editEtdMin', item.etd);
     document.getElementById('editSuhu').value = item.suhu || '';
     document.getElementById('editStatus').value = item.status || '';
+    document.getElementById('editStatus2').value = item.status2 || '';
 
     const matchedGM = [...allGrandMaxDetails].reverse().find(gm =>
       (gm.armada || '').trim() === (item.armada || '').trim() &&
@@ -1673,6 +1722,8 @@
     const rowIndex = parseInt(document.getElementById('editRowIndex').value);
     const gmRowIndex = document.getElementById('editGmRowIndex').value;
     const statusVal = document.getElementById('editStatus').value;
+    const status2Val = document.getElementById('editStatus2').value;
+    const kendalaText = getKendalaLabel(statusVal, status2Val);
     const armadaVal = document.getElementById('editArmada').value;
     const ruteVal = document.getElementById('editRute').value;
     const tanggalVal = document.getElementById('editTanggal').value;
@@ -1688,10 +1739,11 @@
       etd: get24Time('editEtdHour', 'editEtdMin'),
       suhu: document.getElementById('editSuhu').value,
       status: statusVal,
+      status2: status2Val,
       fotoTempatBaru: editBase64FotoTempat || '',
       fotoProdukBaru: editBase64FotoProduk || '',
-      extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
-        status: statusVal,
+      extraDetail: kendalaText ? {
+        status: kendalaText,
         armada: armadaVal,
         customer: ruteVal,
         noDokumen: document.getElementById('editExtraNoDokumen').value,
@@ -1756,6 +1808,8 @@
     const msg = document.getElementById('msg');
 
     const statusVal = document.getElementById('status').value;
+    const status2Val = document.getElementById('status2').value;
+    const kendalaText = getKendalaLabel(statusVal, status2Val);
     const armadaVal = document.getElementById('armada').value;
     const ruteVal = document.getElementById('rute').value;
     const tanggalVal = document.getElementById('tanggal').value;
@@ -1775,8 +1829,9 @@
       etd: etdVal,
       suhu: suhuVal,
       status: statusVal,
-      extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
-        status: statusVal,
+      status2: status2Val,
+      extraDetail: kendalaText ? {
+        status: kendalaText,
         armada: armadaVal,
         customer: ruteVal,
         noDokumen: document.getElementById('extraNoDokumen').value,
@@ -1807,7 +1862,8 @@
       fotoProduk: '',
       etd: etdVal,
       suhu: suhuVal,
-      status: statusVal
+      status: statusVal,
+      status2: status2Val
     });
     if (payload.extraDetail) {
       allStatusDetails.push(payload.extraDetail);
