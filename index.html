@@ -135,6 +135,7 @@
     }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #1f2937; }
+    .opt-tag { font-weight: 400; font-size: 11px; color: #64748b; }
     input, select, textarea {
       width: 100%;
       padding: 11px 12px;
@@ -235,9 +236,9 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 10px;
+      padding: 9px 8px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid #cbd5e1;
@@ -413,6 +414,7 @@
     .st-terkirim { background: #dcfce7; color: #166534; }
     .st-pending { background: #fef3c7; color: #92400e; }
     .st-cancel, .st-retur { background: #fee2e2; color: #991b1b; }
+    .st-jalan { background: #e0f2fe; color: #0369a1; }
     .st-syncing { background: #e0f2fe; color: #0369a1; }
     .empty-day { text-align: center; font-size: 12px; color: #94a3b8; padding: 14px 0; }
 
@@ -431,8 +433,8 @@
     .modal-box {
       background: #fff;
       width: 100%;
-      max-width: 520px;
-      max-height: 90vh;
+      max-width: 540px;
+      max-height: 92vh;
       overflow-y: auto;
       border-radius: 14px;
       padding: 22px;
@@ -449,35 +451,55 @@
     }
     .modal-header h3 { margin: 0; font-size: 17px; color: var(--gr-black); }
     .close-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b; }
-    .photo-links {
+    
+    .photo-edit-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 14px;
     }
-    .photo-box {
-      background: var(--gr-green-light);
-      border: 1px solid #a7f3d0;
-      border-radius: 8px;
+    .photo-card-edit {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
       padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .photo-card-edit.has-photo {
+      background: var(--gr-green-light);
+      border-color: #6ee7b7;
+    }
+    .photo-card-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--gr-black);
       text-align: center;
-      font-size: 12px;
     }
     .btn-view-photo {
-      margin-top: 6px;
+      width: 100%;
       background: var(--gr-green);
       color: #fff;
       border: none;
-      padding: 6px 12px;
+      padding: 7px 10px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
     }
-    .btn-view-photo:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
+    .btn-replace-photo {
+      width: 100%;
+      background: #fff;
+      color: var(--gr-green-dark);
+      border: 1px solid #6ee7b7;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
     }
+
     .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
     .btn-save-edit { flex: 1; background: var(--gr-green); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-cancel-edit { background: #e2e8f0; color: #334155; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
@@ -606,9 +628,9 @@
             </select>
           </div>
 
-          <!-- FORM KHUSUS GRAND MAX (MUNCUL OTOMATIS SAAT ARMADA = GRAND MAX) -->
+          <!-- FORM KHUSUS GRAND MAX (OPSIONAL SAAT BERANGKAT, BISA DILENGKAPI DI HALAMAN 2) -->
           <div id="grandMaxBox" class="grandmax-box">
-            <div class="grandmax-title">🚐 Form Operasional Grand Max</div>
+            <div class="grandmax-title">🚐 Form Operasional Grand Max <span class="opt-tag">(Bisa diisi bertahap)</span></div>
             
             <div class="grid-3col" style="margin-bottom:10px;">
               <div>
@@ -632,7 +654,7 @@
               </div>
               <div>
                 <label for="gmKmAkhir">Kilometer Akhir</label>
-                <input type="number" id="gmKmAkhir" placeholder="Contoh: 12585">
+                <input type="number" id="gmKmAkhir" placeholder="Isi saat selesai">
               </div>
             </div>
 
@@ -666,8 +688,9 @@
             </div>
           </div>
 
+          <!-- BAGIAN DI BAWAH INI TIDAK WAJIB DIISI SAAT AWAL (BISA DILENGKAPI DI HALAMAN 2) -->
           <div class="form-group">
-            <label>Foto Tempat</label>
+            <label>Foto Tempat <span class="opt-tag">(Opsional di awal, bisa diisi di Halaman 2)</span></label>
             <div class="photo-picker-group">
               <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camTempat').click()">📷 Ambil Foto</button>
               <button type="button" class="btn-photo-opt" onclick="document.getElementById('galTempat').click()">🖼️ Pilih Galeri</button>
@@ -681,7 +704,7 @@
           </div>
 
           <div class="form-group">
-            <label>Foto Produk</label>
+            <label>Foto Produk <span class="opt-tag">(Opsional di awal, bisa diisi di Halaman 2)</span></label>
             <div class="photo-picker-group">
               <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camProduk').click()">📷 Ambil Foto</button>
               <button type="button" class="btn-photo-opt" onclick="document.getElementById('galProduk').click()">🖼️ Pilih Galeri</button>
@@ -695,22 +718,22 @@
           </div>
 
           <div class="form-group">
-            <label>ETD (Jam Berangkat / Selesai - Format 24 Jam)</label>
+            <label>ETD (Jam Berangkat / Selesai - Format 24 Jam) <span class="opt-tag">(Opsional di awal)</span></label>
             <div class="time-24-wrap">
-              <select id="etdHour" required></select>
+              <select id="etdHour"></select>
               <span class="time-sep">:</span>
-              <select id="etdMin" required></select>
+              <select id="etdMin"></select>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="suhu">Suhu (°C)</label>
-            <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C" required>
+            <label for="suhu">Suhu (°C) <span class="opt-tag">(Opsional di awal)</span></label>
+            <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C">
           </div>
 
           <div class="form-group">
-            <label for="status">Status</label>
-            <select id="status" required onchange="toggleExtraStatusForm()">
+            <label for="status">Status <span class="opt-tag">(Opsional di awal)</span></label>
+            <select id="status" onchange="toggleExtraStatusForm()">
               <option value="">-- Pilih Status --</option>
               <option value="Terkirim">Terkirim</option>
               <option value="Pending">Pending</option>
@@ -765,7 +788,7 @@
       <div class="filter-bar">
         <div class="filter-title">
           <h3>📅 MATRIX REVIEW PENGIRIMAN BULANAN (PER ARMADA)</h3>
-          <p>Data dikelompokkan otomatis berdasarkan Armada. Klik pada item Customer untuk melihat foto & edit ke Google Sheets</p>
+          <p>Klik pada item Customer untuk melengkapi foto di tempat, jam ETD, suhu, status, maupun data Grand Max</p>
         </div>
         <div class="filter-controls">
           <label style="margin:0;">Bulan:</label>
@@ -797,7 +820,7 @@
 
   </div>
 
-  <!-- ================= MODAL DETAIL & EDIT DATA ================= -->
+  <!-- ================= MODAL DETAIL & EDIT DATA (LENGKAP & BERJALAN) ================= -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -806,15 +829,66 @@
       </div>
       <form id="editForm">
         <input type="hidden" id="editRowIndex">
+        <input type="hidden" id="editGmRowIndex">
         
-        <div class="photo-links">
-          <div class="photo-box">
-            <div>📸 <strong>Foto Tempat</strong></div>
-            <button type="button" class="btn-view-photo" id="btnViewFotoTempat" onclick="openPhotoPopup('tempat')">👁️ Lihat Foto</button>
+        <!-- BAGIAN FOTO TEMPAT & FOTO PRODUK DI HALAMAN 2 -->
+        <div class="photo-edit-grid">
+          <!-- FOTO TEMPAT -->
+          <div class="photo-card-edit" id="cardEditTempat">
+            <div class="photo-card-title">📸 Foto Tempat</div>
+            
+            <!-- Tampilan jika BELUM ada foto (Format seperti Halaman 1) -->
+            <div id="editUploadTempatWrap">
+              <div class="photo-picker-group">
+                <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamTempat').click()">📷 Kamera</button>
+                <button type="button" class="btn-photo-opt" onclick="document.getElementById('editGalTempat').click()">🖼️ Galeri</button>
+              </div>
+            </div>
+
+            <!-- Tampilan jika SUDAH ada foto (Bisa Lihat Foto & Ganti Foto jika salah) -->
+            <div id="editExistingTempatWrap" style="display:none;">
+              <button type="button" class="btn-view-photo" onclick="openPhotoPopup('tempat')">👁️ Lihat Foto</button>
+              <div class="photo-picker-group" style="margin-top:6px;">
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editCamTempat').click()">📷 Ganti Kamera</button>
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editGalTempat').click()">🖼️ Ganti Galeri</button>
+              </div>
+            </div>
+
+            <input type="file" id="editCamTempat" accept="image/*" capture="environment" style="display:none" onchange="handleEditPhotoSelect(this, 'tempat')">
+            <input type="file" id="editGalTempat" accept="image/*" style="display:none" onchange="handleEditPhotoSelect(this, 'tempat')">
+            <div class="preview-box" id="editPrevBoxTempat">
+              <img id="editPrevImgTempat" src="" alt="Preview Foto Tempat Baru">
+              <div class="preview-caption" id="editCapTempat">✅ Foto baru siap disimpan</div>
+            </div>
           </div>
-          <div class="photo-box">
-            <div>📦 <strong>Foto Produk</strong></div>
-            <button type="button" class="btn-view-photo" id="btnViewFotoProduk" onclick="openPhotoPopup('produk')">👁️ Lihat Foto</button>
+
+          <!-- FOTO PRODUK -->
+          <div class="photo-card-edit" id="cardEditProduk">
+            <div class="photo-card-title">📦 Foto Produk</div>
+            
+            <!-- Tampilan jika BELUM ada foto (Format seperti Halaman 1) -->
+            <div id="editUploadProdukWrap">
+              <div class="photo-picker-group">
+                <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamProduk').click()">📷 Kamera</button>
+                <button type="button" class="btn-photo-opt" onclick="document.getElementById('editGalProduk').click()">🖼️ Galeri</button>
+              </div>
+            </div>
+
+            <!-- Tampilan jika SUDAH ada foto (Bisa Lihat Foto & Ganti Foto jika salah) -->
+            <div id="editExistingProdukWrap" style="display:none;">
+              <button type="button" class="btn-view-photo" onclick="openPhotoPopup('produk')">👁️ Lihat Foto</button>
+              <div class="photo-picker-group" style="margin-top:6px;">
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editCamProduk').click()">📷 Ganti Kamera</button>
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editGalProduk').click()">🖼️ Ganti Galeri</button>
+              </div>
+            </div>
+
+            <input type="file" id="editCamProduk" accept="image/*" capture="environment" style="display:none" onchange="handleEditPhotoSelect(this, 'produk')">
+            <input type="file" id="editGalProduk" accept="image/*" style="display:none" onchange="handleEditPhotoSelect(this, 'produk')">
+            <div class="preview-box" id="editPrevBoxProduk">
+              <img id="editPrevImgProduk" src="" alt="Preview Foto Produk Baru">
+              <div class="preview-caption" id="editCapProduk">✅ Foto baru siap disimpan</div>
+            </div>
           </div>
         </div>
 
@@ -830,6 +904,58 @@
           <label>Rute (Customer / Tujuan)</label>
           <select id="editRute" required onchange="syncEditDynamicForms()"></select>
         </div>
+
+        <!-- FORM EDIT OPERASIONAL GRAND MAX DI HALAMAN 2 -->
+        <div id="editGrandMaxBox" class="grandmax-box">
+          <div class="grandmax-title">🚐 Edit Operasional Grand Max</div>
+          
+          <div class="grid-3col" style="margin-bottom:10px;">
+            <div>
+              <label>Armada</label>
+              <input type="text" id="editGmArmada" readonly>
+            </div>
+            <div>
+              <label>Rute</label>
+              <input type="text" id="editGmRute" readonly>
+            </div>
+            <div>
+              <label>Tanggal</label>
+              <input type="text" id="editGmTanggal" readonly>
+            </div>
+          </div>
+
+          <div class="grid-2col" style="margin-bottom:10px;">
+            <div>
+              <label>Kilometer Awal</label>
+              <input type="number" id="editGmKmAwal" placeholder="0">
+            </div>
+            <div>
+              <label>Kilometer Akhir</label>
+              <input type="number" id="editGmKmAkhir" placeholder="0">
+            </div>
+          </div>
+
+          <div class="grid-3col" style="margin-bottom:10px;">
+            <div>
+              <label>Bensin (Rp)</label>
+              <input type="number" id="editGmBensin" min="0" placeholder="0" oninput="hitungEditTotalGrandMax()">
+            </div>
+            <div>
+              <label>Tol (Rp)</label>
+              <input type="number" id="editGmTol" min="0" placeholder="0" oninput="hitungEditTotalGrandMax()">
+            </div>
+            <div>
+              <label>Parkir (Rp)</label>
+              <input type="number" id="editGmParkir" min="0" placeholder="0" oninput="hitungEditTotalGrandMax()">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Total (Bensin + Tol + Parkir)</label>
+            <input type="number" id="editGmTotal" class="total-biaya-input" value="0" readonly>
+          </div>
+        </div>
+
         <div class="grid-2col">
           <div class="form-group">
             <label>ETA (24 Jam)</label>
@@ -842,20 +968,21 @@
           <div class="form-group">
             <label>ETD (24 Jam)</label>
             <div class="time-24-wrap">
-              <select id="editEtdHour" required></select>
+              <select id="editEtdHour"></select>
               <span class="time-sep">:</span>
-              <select id="editEtdMin" required></select>
+              <select id="editEtdMin"></select>
             </div>
           </div>
         </div>
         <div class="grid-2col">
           <div class="form-group">
             <label>Suhu (°C)</label>
-            <input type="text" id="editSuhu" required>
+            <input type="text" id="editSuhu" placeholder="Contoh: -18°C">
           </div>
           <div class="form-group">
             <label>Status</label>
-            <select id="editStatus" required onchange="toggleEditExtraStatusForm()">
+            <select id="editStatus" onchange="toggleEditExtraStatusForm()">
+              <option value="">-- Pilih Status --</option>
               <option value="Terkirim">Terkirim</option>
               <option value="Pending">Pending</option>
               <option value="Cancel">Cancel</option>
@@ -903,7 +1030,7 @@
     </div>
   </div>
 
-  <!-- ================= POPUP PREVIEW FOTO (TIDAK LANGSUNG TAB BARU) ================= -->
+  <!-- ================= POPUP PREVIEW FOTO ================= -->
   <div class="photo-popup-overlay" id="photoPopupModal" onclick="if(event.target===this) closePhotoPopup()">
     <div class="photo-popup-box">
       <div class="photo-popup-header">
@@ -922,14 +1049,17 @@
 
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJVXvi6XmTqsYugyyniEVi3UdGbBnOR5jtQyerhqMRI2weOmISSeUFcokfQzTp6zEp/exec';
-  const CACHE_KEY = 'gr_logistics_cache_v2';
+  const CACHE_KEY = 'gr_logistics_cache_v3';
 
   let allRoutes = [];
   let allArmadas = [];
   let allDeliveries = [];
   let allStatusDetails = [];
+  let allGrandMaxDetails = [];
   let base64FotoTempat = '';
   let base64FotoProduk = '';
+  let editBase64FotoTempat = '';
+  let editBase64FotoProduk = '';
   let currentLocationText = 'Lokasi GPS siap';
   let pendingUploads = 0;
 
@@ -987,10 +1117,13 @@
       if (/am/i.test(clean) && hh === 12) hh = 0;
       document.getElementById(hourId).value = String(hh).padStart(2, '0');
       document.getElementById(minId).value = mm;
+    } else {
+      document.getElementById(hourId).value = '';
+      document.getElementById(minId).value = '';
     }
   }
 
-  // ================= 1. INSTANT CACHE LOAD (0ms TANPA LAG) =================
+  // ================= 1. INSTANT CACHE LOAD =================
   function loadFromLocalCache() {
     try {
       const raw = localStorage.getItem(CACHE_KEY);
@@ -1001,6 +1134,7 @@
         allRoutes = cached.routes || [];
         allDeliveries = cached.deliveries || [];
         allStatusDetails = cached.statusDetails || [];
+        allGrandMaxDetails = cached.grandMaxDetails || [];
         populateDropdowns();
         return true;
       }
@@ -1015,18 +1149,18 @@
         routes: allRoutes,
         deliveries: allDeliveries,
         statusDetails: allStatusDetails,
+        grandMaxDetails: allGrandMaxDetails,
         ts: Date.now()
       }));
     } catch (e) {}
   }
 
-  // ================= SINKRONISASI FORM DINAMIS (GRAND MAX & CANCEL/PENDING/RETUR) =================
+  // ================= SINKRONISASI FORM DINAMIS HALAMAN 1 =================
   function syncDynamicForms() {
     const armadaVal = document.getElementById('armada').value;
     const ruteVal = document.getElementById('rute').value;
     const tanggalVal = document.getElementById('tanggal').value;
 
-    // 1. Cek Form Grand Max
     const gmBox = document.getElementById('grandMaxBox');
     const isGrandMax = armadaVal.trim().toLowerCase().includes('grand max');
     if (isGrandMax) {
@@ -1034,21 +1168,10 @@
       document.getElementById('gmArmada').value = armadaVal;
       document.getElementById('gmRute').value = ruteVal;
       document.getElementById('gmTanggal').value = tanggalVal;
-      document.getElementById('gmKmAwal').required = true;
-      document.getElementById('gmKmAkhir').required = true;
-      document.getElementById('gmBensin').required = true;
-      document.getElementById('gmTol').required = true;
-      document.getElementById('gmParkir').required = true;
     } else {
       gmBox.classList.remove('show');
-      document.getElementById('gmKmAwal').required = false;
-      document.getElementById('gmKmAkhir').required = false;
-      document.getElementById('gmBensin').required = false;
-      document.getElementById('gmTol').required = false;
-      document.getElementById('gmParkir').required = false;
     }
 
-    // 2. Sinkronisasi Form Status Tambahan
     document.getElementById('extraArmada').value = armadaVal;
     document.getElementById('extraCustomer').value = ruteVal;
   }
@@ -1063,22 +1186,13 @@
   function toggleExtraStatusForm() {
     const statusVal = document.getElementById('status').value;
     const extraBox = document.getElementById('extraStatusBox');
-    const noDokInput = document.getElementById('extraNoDokumen');
-    const barangInput = document.getElementById('extraBarang');
-    const ketInput = document.getElementById('extraKeterangan');
 
     if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
       extraBox.classList.add('show');
       document.getElementById('extraStatus').value = statusVal;
       syncDynamicForms();
-      noDokInput.required = true;
-      barangInput.required = true;
-      ketInput.required = true;
     } else {
       extraBox.classList.remove('show');
-      noDokInput.required = false;
-      barangInput.required = false;
-      ketInput.required = false;
     }
   }
 
@@ -1118,18 +1232,8 @@
     );
   }
 
-  // ================= 3. KOMPRESI FOTO SUPER RINGAN & CEPAT =================
-  function handlePhotoSelect(inputEl, type) {
-    const file = inputEl.files[0];
-    if (!file) return;
-
-    const capEl = document.getElementById(type === 'tempat' ? 'capTempat' : 'capProduk');
-    const boxEl = document.getElementById(type === 'tempat' ? 'prevBoxTempat' : 'prevBoxProduk');
-    const imgEl = document.getElementById(type === 'tempat' ? 'prevImgTempat' : 'prevImgProduk');
-
-    boxEl.style.display = 'block';
-    capEl.textContent = '⏳ Memproses foto...';
-
+  // ================= 3. KOMPRESI & STEMPEL FOTO =================
+  function processPhotoWithStamp(file, armadaVal, ruteVal, callback) {
     const objUrl = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
@@ -1146,8 +1250,6 @@
       const now = new Date();
       const tglStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
       const jamStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' WIB';
-      const ruteVal = document.getElementById('rute').value;
-      const armadaVal = document.getElementById('armada').value;
 
       const barHeight = 68;
       ctx.fillStyle = 'rgba(11, 26, 16, 0.80)';
@@ -1169,8 +1271,26 @@
       ctx.font = '10px sans-serif';
       ctx.fillText(currentLocationText.substring(0, 74), 14, canvas.height - 11);
 
-      const stampedBase64 = canvas.toDataURL('image/jpeg', 0.65);
+      callback(canvas.toDataURL('image/jpeg', 0.65));
+    };
+    img.src = objUrl;
+  }
 
+  function handlePhotoSelect(inputEl, type) {
+    const file = inputEl.files[0];
+    if (!file) return;
+
+    const capEl = document.getElementById(type === 'tempat' ? 'capTempat' : 'capProduk');
+    const boxEl = document.getElementById(type === 'tempat' ? 'prevBoxTempat' : 'prevBoxProduk');
+    const imgEl = document.getElementById(type === 'tempat' ? 'prevImgTempat' : 'prevImgProduk');
+
+    boxEl.style.display = 'block';
+    capEl.textContent = '⏳ Memproses foto...';
+
+    const armadaVal = document.getElementById('armada').value;
+    const ruteVal = document.getElementById('rute').value;
+
+    processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
       if (type === 'tempat') {
         base64FotoTempat = stampedBase64;
       } else {
@@ -1178,8 +1298,32 @@
       }
       imgEl.src = stampedBase64;
       capEl.textContent = '✅ Foto siap & stempel terpasang';
-    };
-    img.src = objUrl;
+    });
+  }
+
+  function handleEditPhotoSelect(inputEl, type) {
+    const file = inputEl.files[0];
+    if (!file) return;
+
+    const capEl = document.getElementById(type === 'tempat' ? 'editCapTempat' : 'editCapProduk');
+    const boxEl = document.getElementById(type === 'tempat' ? 'editPrevBoxTempat' : 'editPrevBoxProduk');
+    const imgEl = document.getElementById(type === 'tempat' ? 'editPrevImgTempat' : 'editPrevImgProduk');
+
+    boxEl.style.display = 'block';
+    capEl.textContent = '⏳ Memproses foto baru...';
+
+    const armadaVal = document.getElementById('editArmada').value;
+    const ruteVal = document.getElementById('editRute').value;
+
+    processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
+      if (type === 'tempat') {
+        editBase64FotoTempat = stampedBase64;
+      } else {
+        editBase64FotoProduk = stampedBase64;
+      }
+      imgEl.src = stampedBase64;
+      capEl.textContent = '✅ Foto baru siap disimpan';
+    });
   }
 
   function switchPage(pageId) {
@@ -1208,6 +1352,7 @@
       allRoutes = data.routes || [];
       allDeliveries = data.deliveries || [];
       allStatusDetails = data.statusDetails || [];
+      allGrandMaxDetails = data.grandMaxDetails || [];
 
       saveToLocalCache();
       populateDropdowns();
@@ -1336,8 +1481,9 @@
 
             armItems.forEach(item => {
               const isTemp = String(item.rowIndex).startsWith('temp_');
-              const stClass = isTemp ? 'st-syncing' : ('st-' + (item.status || '').toLowerCase());
-              const stText = isTemp ? '⏳ Mengirim...' : (item.status || '-');
+              const rawStatus = (item.status || '').trim();
+              const stClass = isTemp ? 'st-syncing' : (rawStatus ? ('st-' + rawStatus.toLowerCase()) : 'st-jalan');
+              const stText = isTemp ? '⏳ Mengirim...' : (rawStatus || 'Berjalan');
               const clickAttr = isTemp ? '' : `onclick="openDetailModal(${item.rowIndex})"`;
 
               html += `<div class="route-pill" ${clickAttr}>
@@ -1362,10 +1508,32 @@
     container.innerHTML = html;
   }
 
-  // ================= MODAL DETAIL & EDIT (TERMASUK DETAIL CANCEL/PENDING/RETUR) =================
+  // ================= MODAL DETAIL & EDIT (HALAMAN 2) =================
   function syncEditDynamicForms() {
-    document.getElementById('editExtraArmada').value = document.getElementById('editArmada').value;
-    document.getElementById('editExtraCustomer').value = document.getElementById('editRute').value;
+    const armadaVal = document.getElementById('editArmada').value;
+    const ruteVal = document.getElementById('editRute').value;
+    const tanggalVal = document.getElementById('editTanggal').value;
+
+    const gmBox = document.getElementById('editGrandMaxBox');
+    const isGrandMax = armadaVal.trim().toLowerCase().includes('grand max');
+    if (isGrandMax) {
+      gmBox.classList.add('show');
+      document.getElementById('editGmArmada').value = armadaVal;
+      document.getElementById('editGmRute').value = ruteVal;
+      document.getElementById('editGmTanggal').value = tanggalVal;
+    } else {
+      gmBox.classList.remove('show');
+    }
+
+    document.getElementById('editExtraArmada').value = armadaVal;
+    document.getElementById('editExtraCustomer').value = ruteVal;
+  }
+
+  function hitungEditTotalGrandMax() {
+    const bensin = parseFloat(document.getElementById('editGmBensin').value) || 0;
+    const tol = parseFloat(document.getElementById('editGmTol').value) || 0;
+    const parkir = parseFloat(document.getElementById('editGmParkir').value) || 0;
+    document.getElementById('editGmTotal').value = bensin + tol + parkir;
   }
 
   function toggleEditExtraStatusForm() {
@@ -1384,6 +1552,11 @@
     const item = allDeliveries.find(d => d.rowIndex === rowIndex);
     if (!item) return;
 
+    editBase64FotoTempat = '';
+    editBase64FotoProduk = '';
+    document.getElementById('editPrevBoxTempat').style.display = 'none';
+    document.getElementById('editPrevBoxProduk').style.display = 'none';
+
     document.getElementById('editRowIndex').value = item.rowIndex;
     document.getElementById('editTanggal').value = item.tanggal;
     
@@ -1401,31 +1574,53 @@
 
     set24Time('editEtaHour', 'editEtaMin', item.eta);
     set24Time('editEtdHour', 'editEtdMin', item.etd);
-    document.getElementById('editSuhu').value = item.suhu;
-    document.getElementById('editStatus').value = item.status;
+    document.getElementById('editSuhu').value = item.suhu || '';
+    document.getElementById('editStatus').value = item.status || '';
 
-    // Cari detail status Pending/Cancel/Retur yang cocok dari sheet Status Pengiriman
+    const matchedGM = [...allGrandMaxDetails].reverse().find(gm =>
+      (gm.armada || '').trim() === (item.armada || '').trim() &&
+      (gm.rute || '').trim() === (item.rute || '').trim() &&
+      (gm.tanggal || '').trim() === (item.tanggal || '').trim()
+    );
+    document.getElementById('editGmRowIndex').value = matchedGM ? (matchedGM.rowIndex || '') : '';
+    document.getElementById('editGmKmAwal').value = matchedGM ? (matchedGM.kmAwal || '') : '';
+    document.getElementById('editGmKmAkhir').value = matchedGM ? (matchedGM.kmAkhir || '') : '';
+    document.getElementById('editGmBensin').value = matchedGM ? (matchedGM.bensin || 0) : '';
+    document.getElementById('editGmTol').value = matchedGM ? (matchedGM.tol || 0) : '';
+    document.getElementById('editGmParkir').value = matchedGM ? (matchedGM.parkir || 0) : '';
+    hitungEditTotalGrandMax();
+    syncEditDynamicForms();
+
     const matchedDetail = [...allStatusDetails].reverse().find(sd =>
       (sd.armada || '').trim() === (item.armada || '').trim() &&
       (sd.customer || '').trim() === (item.rute || '').trim()
     );
-
     document.getElementById('editExtraNoDokumen').value = matchedDetail ? (matchedDetail.noDokumen || '') : '';
     document.getElementById('editExtraBarang').value = matchedDetail ? (matchedDetail.barang || '') : '';
     document.getElementById('editExtraKeterangan').value = matchedDetail ? (matchedDetail.keterangan || '') : '';
     toggleEditExtraStatusForm();
 
-    // Simpan URL Foto untuk Popup Preview
     currentModalFotoTempat = (item.fotoTempat && item.fotoTempat.startsWith('http')) ? item.fotoTempat : '';
+    if (currentModalFotoTempat) {
+      document.getElementById('cardEditTempat').classList.add('has-photo');
+      document.getElementById('editUploadTempatWrap').style.display = 'none';
+      document.getElementById('editExistingTempatWrap').style.display = 'block';
+    } else {
+      document.getElementById('cardEditTempat').classList.remove('has-photo');
+      document.getElementById('editUploadTempatWrap').style.display = 'block';
+      document.getElementById('editExistingTempatWrap').style.display = 'none';
+    }
+
     currentModalFotoProduk = (item.fotoProduk && item.fotoProduk.startsWith('http')) ? item.fotoProduk : '';
-
-    const btnTempat = document.getElementById('btnViewFotoTempat');
-    btnTempat.disabled = !currentModalFotoTempat;
-    btnTempat.textContent = currentModalFotoTempat ? '👁️ Lihat Foto' : 'Tidak ada foto';
-
-    const btnProduk = document.getElementById('btnViewFotoProduk');
-    btnProduk.disabled = !currentModalFotoProduk;
-    btnProduk.textContent = currentModalFotoProduk ? '👁️ Lihat Foto' : 'Tidak ada foto';
+    if (currentModalFotoProduk) {
+      document.getElementById('cardEditProduk').classList.add('has-photo');
+      document.getElementById('editUploadProdukWrap').style.display = 'none';
+      document.getElementById('editExistingProdukWrap').style.display = 'block';
+    } else {
+      document.getElementById('cardEditProduk').classList.remove('has-photo');
+      document.getElementById('editUploadProdukWrap').style.display = 'block';
+      document.getElementById('editExistingProdukWrap').style.display = 'none';
+    }
 
     document.getElementById('editMsg').textContent = '';
     document.getElementById('detailModal').classList.add('open');
@@ -1435,7 +1630,7 @@
     document.getElementById('detailModal').classList.remove('open');
   }
 
-  // ================= POPUP PREVIEW FOTO (KLIK UNDUH BARU BUKA TAB BARU) =================
+  // ================= POPUP PREVIEW FOTO =================
   function extractDriveFileId(url) {
     if (!url) return '';
     const m1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -1457,7 +1652,6 @@
 
     const fileId = extractDriveFileId(url);
     if (fileId) {
-      // Thumbnail resolusi tinggi Google Drive agar tampil langsung di dalam popup tanpa buka tab baru
       imgEl.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
       dlLink.href = `https://drive.google.com/uc?export=download&id=${fileId}`;
     } else {
@@ -1473,24 +1667,29 @@
     document.getElementById('photoPopupImg').src = '';
   }
 
-  // Simpan perubahan dari Modal Detail & Edit
+  // ================= SIMPAN PERUBAHAN DARI HALAMAN 2 =================
   document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const rowIndex = parseInt(document.getElementById('editRowIndex').value);
+    const gmRowIndex = document.getElementById('editGmRowIndex').value;
     const statusVal = document.getElementById('editStatus').value;
     const armadaVal = document.getElementById('editArmada').value;
     const ruteVal = document.getElementById('editRute').value;
+    const tanggalVal = document.getElementById('editTanggal').value;
+    const isGrandMax = armadaVal.trim().toLowerCase().includes('grand max');
 
     const payload = {
       action: 'update',
       rowIndex: rowIndex,
-      tanggal: document.getElementById('editTanggal').value,
+      tanggal: tanggalVal,
       armada: armadaVal,
       rute: ruteVal,
       eta: get24Time('editEtaHour', 'editEtaMin'),
       etd: get24Time('editEtdHour', 'editEtdMin'),
       suhu: document.getElementById('editSuhu').value,
       status: statusVal,
+      fotoTempatBaru: editBase64FotoTempat || '',
+      fotoProdukBaru: editBase64FotoProduk || '',
       extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
         status: statusVal,
         armada: armadaVal,
@@ -1498,6 +1697,18 @@
         noDokumen: document.getElementById('editExtraNoDokumen').value,
         barang: document.getElementById('editExtraBarang').value,
         keterangan: document.getElementById('editExtraKeterangan').value
+      } : null,
+      grandMaxDetail: isGrandMax ? {
+        gmRowIndex: gmRowIndex ? parseInt(gmRowIndex) : null,
+        armada: armadaVal,
+        rute: ruteVal,
+        tanggal: tanggalVal,
+        kmAwal: parseFloat(document.getElementById('editGmKmAwal').value) || 0,
+        kmAkhir: parseFloat(document.getElementById('editGmKmAkhir').value) || 0,
+        bensin: parseFloat(document.getElementById('editGmBensin').value) || 0,
+        tol: parseFloat(document.getElementById('editGmTol').value) || 0,
+        parkir: parseFloat(document.getElementById('editGmParkir').value) || 0,
+        total: parseFloat(document.getElementById('editGmTotal').value) || 0
       } : null
     };
 
@@ -1507,20 +1718,29 @@
       if (payload.extraDetail) {
         allStatusDetails.push(payload.extraDetail);
       }
+      if (payload.grandMaxDetail) {
+        allGrandMaxDetails.push(payload.grandMaxDetail);
+      }
       saveToLocalCache();
       renderMatrix();
     }
     closeModal();
+
+    pendingUploads++;
+    updateQueueBadge();
 
     try {
       await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
       syncDataBackground(false);
     } catch (err) {
       alert('Gagal menyimpan perubahan ke server: ' + err.message);
+    } finally {
+      pendingUploads = Math.max(0, pendingUploads - 1);
+      updateQueueBadge();
     }
   });
 
-  // ================= 5. PENGIRIMAN KILAT DI LATAR BELAKANG =================
+  // ================= 5. PENGIRIMAN KILAT DARI HALAMAN 1 =================
   function updateQueueBadge() {
     const badge = document.getElementById('queueBadge');
     if (pendingUploads > 0) {
@@ -1534,12 +1754,6 @@
   document.getElementById('driverForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const msg = document.getElementById('msg');
-
-    if (!base64FotoTempat || !base64FotoProduk) {
-      msg.className = 'status-msg error';
-      msg.textContent = '⚠️ Harap ambil/pilih Foto Tempat dan Foto Produk terlebih dahulu!';
-      return;
-    }
 
     const statusVal = document.getElementById('status').value;
     const armadaVal = document.getElementById('armada').value;
@@ -1556,8 +1770,8 @@
       armada: armadaVal,
       rute: ruteVal,
       eta: etaVal,
-      fotoTempat: base64FotoTempat,
-      fotoProduk: base64FotoProduk,
+      fotoTempat: base64FotoTempat || '',
+      fotoProduk: base64FotoProduk || '',
       etd: etdVal,
       suhu: suhuVal,
       status: statusVal,
@@ -1598,6 +1812,9 @@
     if (payload.extraDetail) {
       allStatusDetails.push(payload.extraDetail);
     }
+    if (payload.grandMaxDetail) {
+      allGrandMaxDetails.push(payload.grandMaxDetail);
+    }
     saveToLocalCache();
 
     // Reset form seketika
@@ -1615,7 +1832,7 @@
     document.getElementById('prevBoxProduk').style.display = 'none';
 
     msg.className = 'status-msg success';
-    msg.textContent = '⚡ Laporan tercatat! Mengirim ke Google Sheets di latar belakang...';
+    msg.textContent = '⚡ Laporan tercatat! Lanjutkan pengisian berikutnya di Halaman 2 saat tiba di lokasi.';
 
     pendingUploads++;
     updateQueueBadge();
@@ -1628,7 +1845,7 @@
     .then(result => {
       if (result.status === 'success') {
         msg.className = 'status-msg success';
-        msg.textContent = '✅ Laporan & foto berhasil tersimpan di Google Sheets!';
+        msg.textContent = '✅ Data awal berhasil tersimpan! Silakan lengkapi di Halaman 2 saat sampai di tujuan.';
         syncDataBackground(false);
       } else {
         throw new Error(result.message);
