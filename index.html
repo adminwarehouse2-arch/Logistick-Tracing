@@ -146,6 +146,62 @@
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gr-green); box-shadow: 0 0 0 3px rgba(0,155,58,0.12); }
     input[readonly] { background-color: #f1f5f9; color: #475569; font-weight: 600; cursor: not-allowed; }
 
+    /* TIME 24-JAM TANPA AM/PM */
+    .time-24-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .time-24-wrap select {
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .time-sep {
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gr-black);
+    }
+
+    /* KOTAK FORM GRAND MAX */
+    .grandmax-box {
+      display: none;
+      background: #eff6ff;
+      border: 1.5px solid #3b82f6;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .grandmax-box.show { display: block; }
+    .grandmax-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d4ed8;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px dashed #93c5fd;
+      padding-bottom: 8px;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .grid-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .total-biaya-input {
+      background-color: #dbeafe !important;
+      color: #1e3a8a !important;
+      font-weight: 800 !important;
+      font-size: 15px !important;
+      border-color: #60a5fa !important;
+    }
+
     /* KOTAK FORM TAMBAHAN SAAT PENDING / CANCEL / RETUR */
     .extra-status-box {
       display: none;
@@ -407,16 +463,92 @@
       text-align: center;
       font-size: 12px;
     }
-    .photo-box a {
-      display: inline-block;
-      margin-top: 4px;
-      color: var(--gr-green-dark);
-      font-weight: 800;
-      text-decoration: none;
+    .btn-view-photo {
+      margin-top: 6px;
+      background: var(--gr-green);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-view-photo:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
     }
     .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
     .btn-save-edit { flex: 1; background: var(--gr-green); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-cancel-edit { background: #e2e8f0; color: #334155; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+    /* ================= POPUP PREVIEW FOTO ================= */
+    .photo-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .photo-popup-overlay.open { display: flex; }
+    .photo-popup-box {
+      background: #fff;
+      width: 100%;
+      max-width: 560px;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    }
+    .photo-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+    .photo-popup-header h4 { margin: 0; font-size: 15px; color: var(--gr-black); }
+    .photo-frame {
+      width: 100%;
+      min-height: 260px;
+      max-height: 62vh;
+      background: #0f172a;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .photo-frame img {
+      max-width: 100%;
+      max-height: 62vh;
+      object-fit: contain;
+      display: block;
+    }
+    .photo-popup-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn-download-newtab {
+      flex: 1;
+      background: var(--gr-green);
+      color: #fff;
+      text-decoration: none;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -457,26 +589,81 @@
         <form id="driverForm">
           <div class="form-group">
             <label for="tanggal">Tanggal</label>
-            <input type="date" id="tanggal" required>
+            <input type="date" id="tanggal" required onchange="syncDynamicForms()">
           </div>
 
           <div class="form-group">
             <label for="armada">Armada</label>
-            <select id="armada" required onchange="syncExtraFields()">
+            <select id="armada" required onchange="syncDynamicForms()">
               <option value="">-- Pilih Armada --</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="rute">Rute (Customer / Tujuan)</label>
-            <select id="rute" required onchange="syncExtraFields()">
+            <select id="rute" required onchange="syncDynamicForms()">
               <option value="">-- Pilih Rute --</option>
             </select>
           </div>
 
+          <!-- FORM KHUSUS GRAND MAX (MUNCUL OTOMATIS SAAT ARMADA = GRAND MAX) -->
+          <div id="grandMaxBox" class="grandmax-box">
+            <div class="grandmax-title">🚐 Form Operasional Grand Max</div>
+            
+            <div class="grid-3col" style="margin-bottom:10px;">
+              <div>
+                <label for="gmArmada">Armada</label>
+                <input type="text" id="gmArmada" readonly>
+              </div>
+              <div>
+                <label for="gmRute">Rute</label>
+                <input type="text" id="gmRute" readonly>
+              </div>
+              <div>
+                <label for="gmTanggal">Tanggal</label>
+                <input type="text" id="gmTanggal" readonly>
+              </div>
+            </div>
+
+            <div class="grid-2col" style="margin-bottom:10px;">
+              <div>
+                <label for="gmKmAwal">Kilometer Awal</label>
+                <input type="number" id="gmKmAwal" placeholder="Contoh: 12500">
+              </div>
+              <div>
+                <label for="gmKmAkhir">Kilometer Akhir</label>
+                <input type="number" id="gmKmAkhir" placeholder="Contoh: 12585">
+              </div>
+            </div>
+
+            <div class="grid-3col" style="margin-bottom:10px;">
+              <div>
+                <label for="gmBensin">Bensin (Rp)</label>
+                <input type="number" id="gmBensin" min="0" placeholder="0" oninput="hitungTotalGrandMax()">
+              </div>
+              <div>
+                <label for="gmTol">Tol (Rp)</label>
+                <input type="number" id="gmTol" min="0" placeholder="0" oninput="hitungTotalGrandMax()">
+              </div>
+              <div>
+                <label for="gmParkir">Parkir (Rp)</label>
+                <input type="number" id="gmParkir" min="0" placeholder="0" oninput="hitungTotalGrandMax()">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="gmTotal">Total (Bensin + Tol + Parkir)</label>
+              <input type="number" id="gmTotal" class="total-biaya-input" value="0" readonly>
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="eta">ETA (Jam Tiba)</label>
-            <input type="time" id="eta" required>
+            <label>ETA (Jam Tiba - Format 24 Jam)</label>
+            <div class="time-24-wrap">
+              <select id="etaHour" required></select>
+              <span class="time-sep">:</span>
+              <select id="etaMin" required></select>
+            </div>
           </div>
 
           <div class="form-group">
@@ -508,13 +695,19 @@
           </div>
 
           <div class="form-group">
-            <label for="etd">ETD (Jam Berangkat / Selesai)</label>
-            <input type="time" id="etd" required>
+            <label>ETD (Jam Berangkat / Selesai - Format 24 Jam)</label>
+            <div class="time-24-wrap">
+              <select id="etdHour" required></select>
+              <span class="time-sep">:</span>
+              <select id="etdMin" required></select>
+            </div>
           </div>
+
           <div class="form-group">
             <label for="suhu">Suhu (°C)</label>
             <input type="text" id="suhu" placeholder="Contoh: -18°C atau 4°C" required>
           </div>
+
           <div class="form-group">
             <label for="status">Status</label>
             <select id="status" required onchange="toggleExtraStatusForm()">
@@ -617,49 +810,87 @@
         <div class="photo-links">
           <div class="photo-box">
             <div>📸 <strong>Foto Tempat</strong></div>
-            <a id="linkFotoTempat" href="#" target="_blank">Buka Foto ↗</a>
+            <button type="button" class="btn-view-photo" id="btnViewFotoTempat" onclick="openPhotoPopup('tempat')">👁️ Lihat Foto</button>
           </div>
           <div class="photo-box">
             <div>📦 <strong>Foto Produk</strong></div>
-            <a id="linkFotoProduk" href="#" target="_blank">Buka Foto ↗</a>
+            <button type="button" class="btn-view-photo" id="btnViewFotoProduk" onclick="openPhotoPopup('produk')">👁️ Lihat Foto</button>
           </div>
         </div>
 
         <div class="form-group">
           <label>Tanggal</label>
-          <input type="date" id="editTanggal" required>
+          <input type="date" id="editTanggal" required onchange="syncEditDynamicForms()">
         </div>
         <div class="form-group">
           <label>Armada</label>
-          <select id="editArmada" required></select>
+          <select id="editArmada" required onchange="syncEditDynamicForms()"></select>
         </div>
         <div class="form-group">
           <label>Rute (Customer / Tujuan)</label>
-          <select id="editRute" required></select>
+          <select id="editRute" required onchange="syncEditDynamicForms()"></select>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="grid-2col">
           <div class="form-group">
-            <label>ETA (Jam Tiba)</label>
-            <input type="time" id="editEta" required>
+            <label>ETA (24 Jam)</label>
+            <div class="time-24-wrap">
+              <select id="editEtaHour" required></select>
+              <span class="time-sep">:</span>
+              <select id="editEtaMin" required></select>
+            </div>
           </div>
           <div class="form-group">
-            <label>ETD (Jam Selesai)</label>
-            <input type="time" id="editEtd" required>
+            <label>ETD (24 Jam)</label>
+            <div class="time-24-wrap">
+              <select id="editEtdHour" required></select>
+              <span class="time-sep">:</span>
+              <select id="editEtdMin" required></select>
+            </div>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="grid-2col">
           <div class="form-group">
             <label>Suhu (°C)</label>
             <input type="text" id="editSuhu" required>
           </div>
           <div class="form-group">
             <label>Status</label>
-            <select id="editStatus" required>
+            <select id="editStatus" required onchange="toggleEditExtraStatusForm()">
               <option value="Terkirim">Terkirim</option>
               <option value="Pending">Pending</option>
               <option value="Cancel">Cancel</option>
               <option value="Retur">Retur</option>
             </select>
+          </div>
+        </div>
+
+        <!-- DETAIL STATUS PENDING / CANCEL / RETUR DI DALAM MODAL DETAIL & EDIT -->
+        <div id="editExtraStatusBox" class="extra-status-box">
+          <div class="extra-status-title">⚠️ Detail Status Pengiriman (Pending / Cancel / Retur)</div>
+          
+          <div class="form-group">
+            <label>Status</label>
+            <input type="text" id="editExtraStatus" readonly>
+          </div>
+          <div class="form-group">
+            <label>Armada</label>
+            <input type="text" id="editExtraArmada" readonly>
+          </div>
+          <div class="form-group">
+            <label>Customer</label>
+            <input type="text" id="editExtraCustomer" readonly>
+          </div>
+          <div class="form-group">
+            <label>No Dokumen</label>
+            <input type="text" id="editExtraNoDokumen" placeholder="Masukkan No SJ / Invoice / DO">
+          </div>
+          <div class="form-group">
+            <label>Barang</label>
+            <input type="text" id="editExtraBarang" placeholder="Nama & Qty barang">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Keterangan</label>
+            <textarea id="editExtraKeterangan" rows="2" placeholder="Alasan pending / retur / cancel..."></textarea>
           </div>
         </div>
 
@@ -672,25 +903,94 @@
     </div>
   </div>
 
+  <!-- ================= POPUP PREVIEW FOTO (TIDAK LANGSUNG TAB BARU) ================= -->
+  <div class="photo-popup-overlay" id="photoPopupModal" onclick="if(event.target===this) closePhotoPopup()">
+    <div class="photo-popup-box">
+      <div class="photo-popup-header">
+        <h4 id="photoPopupTitle">📸 Preview Foto</h4>
+        <button class="close-btn" onclick="closePhotoPopup()">&times;</button>
+      </div>
+      <div class="photo-frame">
+        <img id="photoPopupImg" src="" alt="Preview Foto Pengiriman">
+      </div>
+      <div class="photo-popup-actions">
+        <button type="button" class="btn-cancel-edit" onclick="closePhotoPopup()">Tutup</button>
+        <a id="photoDownloadLink" href="#" target="_blank" rel="noopener" class="btn-download-newtab">⬇️ Unduh / Buka Tab Baru ↗</a>
+      </div>
+    </div>
+  </div>
+
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJVXvi6XmTqsYugyyniEVi3UdGbBnOR5jtQyerhqMRI2weOmISSeUFcokfQzTp6zEp/exec';
-  const CACHE_KEY = 'gr_logistics_cache_v1';
+  const CACHE_KEY = 'gr_logistics_cache_v2';
 
   let allRoutes = [];
   let allArmadas = [];
   let allDeliveries = [];
+  let allStatusDetails = [];
   let base64FotoTempat = '';
   let base64FotoProduk = '';
   let currentLocationText = 'Lokasi GPS siap';
   let pendingUploads = 0;
-  let matrixRenderedOnce = false;
+
+  let currentModalFotoTempat = '';
+  let currentModalFotoProduk = '';
 
   const today = new Date();
   document.getElementById('tanggal').valueAsDate = today;
   document.getElementById('filterBulan').value = today.getMonth();
   document.getElementById('filterTahun').value = today.getFullYear();
 
-  // ================= 1. INSTANT CACHE LOAD (0ms TANPA LAG SAAT DIBUKA) =================
+  // ================= INISIALISASI DROPDOWN JAM 24-JAM (TANPA AM/PM) =================
+  function init24HourSelects() {
+    const hourIds = ['etaHour', 'etdHour', 'editEtaHour', 'editEtdHour'];
+    const minIds = ['etaMin', 'etdMin', 'editEtaMin', 'editEtdMin'];
+
+    hourIds.forEach(id => {
+      const sel = document.getElementById(id);
+      sel.innerHTML = '<option value="">Jam</option>';
+      for (let h = 0; h < 24; h++) {
+        const hh = String(h).padStart(2, '0');
+        sel.add(new Option(hh, hh));
+      }
+    });
+
+    minIds.forEach(id => {
+      const sel = document.getElementById(id);
+      sel.innerHTML = '<option value="">Menit</option>';
+      for (let m = 0; m < 60; m++) {
+        const mm = String(m).padStart(2, '0');
+        sel.add(new Option(mm, mm));
+      }
+    });
+  }
+  init24HourSelects();
+
+  function get24Time(hourId, minId) {
+    const h = document.getElementById(hourId).value;
+    const m = document.getElementById(minId).value;
+    return (h && m) ? `${h}:${m}` : '';
+  }
+
+  function set24Time(hourId, minId, timeStr) {
+    if (!timeStr) {
+      document.getElementById(hourId).value = '';
+      document.getElementById(minId).value = '';
+      return;
+    }
+    const clean = String(timeStr).trim();
+    const match = clean.match(/^(\d{1,2}):(\d{2})/);
+    if (match) {
+      let hh = parseInt(match[1], 10);
+      const mm = match[2];
+      if (/pm/i.test(clean) && hh < 12) hh += 12;
+      if (/am/i.test(clean) && hh === 12) hh = 0;
+      document.getElementById(hourId).value = String(hh).padStart(2, '0');
+      document.getElementById(minId).value = mm;
+    }
+  }
+
+  // ================= 1. INSTANT CACHE LOAD (0ms TANPA LAG) =================
   function loadFromLocalCache() {
     try {
       const raw = localStorage.getItem(CACHE_KEY);
@@ -700,6 +1000,7 @@
         allArmadas = cached.armadas;
         allRoutes = cached.routes || [];
         allDeliveries = cached.deliveries || [];
+        allStatusDetails = cached.statusDetails || [];
         populateDropdowns();
         return true;
       }
@@ -713,14 +1014,50 @@
         armadas: allArmadas,
         routes: allRoutes,
         deliveries: allDeliveries,
+        statusDetails: allStatusDetails,
         ts: Date.now()
       }));
     } catch (e) {}
   }
 
-  function syncExtraFields() {
-    document.getElementById('extraArmada').value = document.getElementById('armada').value;
-    document.getElementById('extraCustomer').value = document.getElementById('rute').value;
+  // ================= SINKRONISASI FORM DINAMIS (GRAND MAX & CANCEL/PENDING/RETUR) =================
+  function syncDynamicForms() {
+    const armadaVal = document.getElementById('armada').value;
+    const ruteVal = document.getElementById('rute').value;
+    const tanggalVal = document.getElementById('tanggal').value;
+
+    // 1. Cek Form Grand Max
+    const gmBox = document.getElementById('grandMaxBox');
+    const isGrandMax = armadaVal.trim().toLowerCase().includes('grand max');
+    if (isGrandMax) {
+      gmBox.classList.add('show');
+      document.getElementById('gmArmada').value = armadaVal;
+      document.getElementById('gmRute').value = ruteVal;
+      document.getElementById('gmTanggal').value = tanggalVal;
+      document.getElementById('gmKmAwal').required = true;
+      document.getElementById('gmKmAkhir').required = true;
+      document.getElementById('gmBensin').required = true;
+      document.getElementById('gmTol').required = true;
+      document.getElementById('gmParkir').required = true;
+    } else {
+      gmBox.classList.remove('show');
+      document.getElementById('gmKmAwal').required = false;
+      document.getElementById('gmKmAkhir').required = false;
+      document.getElementById('gmBensin').required = false;
+      document.getElementById('gmTol').required = false;
+      document.getElementById('gmParkir').required = false;
+    }
+
+    // 2. Sinkronisasi Form Status Tambahan
+    document.getElementById('extraArmada').value = armadaVal;
+    document.getElementById('extraCustomer').value = ruteVal;
+  }
+
+  function hitungTotalGrandMax() {
+    const bensin = parseFloat(document.getElementById('gmBensin').value) || 0;
+    const tol = parseFloat(document.getElementById('gmTol').value) || 0;
+    const parkir = parseFloat(document.getElementById('gmParkir').value) || 0;
+    document.getElementById('gmTotal').value = bensin + tol + parkir;
   }
 
   function toggleExtraStatusForm() {
@@ -733,7 +1070,7 @@
     if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
       extraBox.classList.add('show');
       document.getElementById('extraStatus').value = statusVal;
-      syncExtraFields();
+      syncDynamicForms();
       noDokInput.required = true;
       barangInput.required = true;
       ketInput.required = true;
@@ -745,7 +1082,7 @@
     }
   }
 
-  // ================= 2. GPS NON-BLOCKING (TIDAK MEMBUAT BROWSER HANG) =================
+  // ================= 2. GPS NON-BLOCKING =================
   function detectLocation(manualClick = false) {
     const gpsLabel = document.getElementById('gpsStatusText');
     if (!navigator.geolocation) {
@@ -762,7 +1099,6 @@
         currentLocationText = `Lat: ${lat}, Lng: ${lon}`;
         gpsLabel.textContent = `✅ GPS Aktif: ${lat}, ${lon}`;
 
-        // Reverse geocoding jalan di background tanpa memblokir UI
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16`)
           .then(r => r.json())
           .then(geo => {
@@ -782,7 +1118,7 @@
     );
   }
 
-  // ================= 3. KOMPRESI FOTO SUPER RINGAN & CEPAT (< 90 KB) =================
+  // ================= 3. KOMPRESI FOTO SUPER RINGAN & CEPAT =================
   function handlePhotoSelect(inputEl, type) {
     const file = inputEl.files[0];
     if (!file) return;
@@ -794,12 +1130,11 @@
     boxEl.style.display = 'block';
     capEl.textContent = '⏳ Memproses foto...';
 
-    // Gunakan createObjectURL (jauh lebih cepat & hemat RAM dibanding FileReader untuk file besar)
     const objUrl = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const maxWidth = 640; // Resolusi optimal untuk upload super cepat (< 1 detik)
+      const maxWidth = 640;
       const scaleSize = img.width > maxWidth ? (maxWidth / img.width) : 1;
       canvas.width = Math.round(img.width * scaleSize);
       canvas.height = Math.round(img.height * scaleSize);
@@ -810,7 +1145,7 @@
 
       const now = new Date();
       const tglStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-      const jamStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+      const jamStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' WIB';
       const ruteVal = document.getElementById('rute').value;
       const armadaVal = document.getElementById('armada').value;
 
@@ -834,7 +1169,6 @@
       ctx.font = '10px sans-serif';
       ctx.fillText(currentLocationText.substring(0, 74), 14, canvas.height - 11);
 
-      // Kualitas 0.65 menghasilkan ~55-85 KB per foto: jernih terbaca namun terkirim kilat
       const stampedBase64 = canvas.toDataURL('image/jpeg', 0.65);
 
       if (type === 'tempat') {
@@ -860,7 +1194,7 @@
     }
   }
 
-  // ================= 4. BACKGROUND SYNC DATA TANPA MEMBLOKIR FORM =================
+  // ================= 4. BACKGROUND SYNC DATA =================
   async function syncDataBackground(showAlertOnError = false) {
     const syncBtn = document.getElementById('syncBtn');
     syncBtn.disabled = true;
@@ -873,6 +1207,7 @@
       allArmadas = data.armadas || [];
       allRoutes = data.routes || [];
       allDeliveries = data.deliveries || [];
+      allStatusDetails = data.statusDetails || [];
 
       saveToLocalCache();
       populateDropdowns();
@@ -893,7 +1228,6 @@
     syncDataBackground(true);
   }
 
-  // Pertahankan pilihan driver saat background sync selesai memperbarui dropdown
   function populateDropdowns() {
     const selectArmada1 = document.getElementById('armada');
     const selectArmadaEdit = document.getElementById('editArmada');
@@ -944,7 +1278,6 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const namaHari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
 
-    // Kelompokkan delivery berdasarkan tanggal terlebih dahulu (O(N) jauh lebih cepat dari filter berulang)
     const byDateMap = {};
     allDeliveries.forEach(item => {
       if (!byDateMap[item.tanggal]) byDateMap[item.tanggal] = [];
@@ -1027,7 +1360,24 @@
     });
 
     container.innerHTML = html;
-    matrixRenderedOnce = true;
+  }
+
+  // ================= MODAL DETAIL & EDIT (TERMASUK DETAIL CANCEL/PENDING/RETUR) =================
+  function syncEditDynamicForms() {
+    document.getElementById('editExtraArmada').value = document.getElementById('editArmada').value;
+    document.getElementById('editExtraCustomer').value = document.getElementById('editRute').value;
+  }
+
+  function toggleEditExtraStatusForm() {
+    const statusVal = document.getElementById('editStatus').value;
+    const extraBox = document.getElementById('editExtraStatusBox');
+    if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
+      extraBox.classList.add('show');
+      document.getElementById('editExtraStatus').value = statusVal;
+      syncEditDynamicForms();
+    } else {
+      extraBox.classList.remove('show');
+    }
   }
 
   function openDetailModal(rowIndex) {
@@ -1049,28 +1399,33 @@
     }
     editRuteSelect.value = item.rute || '';
 
-    document.getElementById('editEta').value = item.eta;
-    document.getElementById('editEtd').value = item.etd;
+    set24Time('editEtaHour', 'editEtaMin', item.eta);
+    set24Time('editEtdHour', 'editEtdMin', item.etd);
     document.getElementById('editSuhu').value = item.suhu;
     document.getElementById('editStatus').value = item.status;
 
-    const linkTempat = document.getElementById('linkFotoTempat');
-    if (item.fotoTempat && item.fotoTempat.startsWith('http')) {
-      linkTempat.href = item.fotoTempat;
-      linkTempat.textContent = 'Lihat Foto Tempat ↗';
-    } else {
-      linkTempat.href = '#';
-      linkTempat.textContent = 'Tidak ada foto';
-    }
+    // Cari detail status Pending/Cancel/Retur yang cocok dari sheet Status Pengiriman
+    const matchedDetail = [...allStatusDetails].reverse().find(sd =>
+      (sd.armada || '').trim() === (item.armada || '').trim() &&
+      (sd.customer || '').trim() === (item.rute || '').trim()
+    );
 
-    const linkProduk = document.getElementById('linkFotoProduk');
-    if (item.fotoProduk && item.fotoProduk.startsWith('http')) {
-      linkProduk.href = item.fotoProduk;
-      linkProduk.textContent = 'Lihat Foto Produk ↗';
-    } else {
-      linkProduk.href = '#';
-      linkProduk.textContent = 'Tidak ada foto';
-    }
+    document.getElementById('editExtraNoDokumen').value = matchedDetail ? (matchedDetail.noDokumen || '') : '';
+    document.getElementById('editExtraBarang').value = matchedDetail ? (matchedDetail.barang || '') : '';
+    document.getElementById('editExtraKeterangan').value = matchedDetail ? (matchedDetail.keterangan || '') : '';
+    toggleEditExtraStatusForm();
+
+    // Simpan URL Foto untuk Popup Preview
+    currentModalFotoTempat = (item.fotoTempat && item.fotoTempat.startsWith('http')) ? item.fotoTempat : '';
+    currentModalFotoProduk = (item.fotoProduk && item.fotoProduk.startsWith('http')) ? item.fotoProduk : '';
+
+    const btnTempat = document.getElementById('btnViewFotoTempat');
+    btnTempat.disabled = !currentModalFotoTempat;
+    btnTempat.textContent = currentModalFotoTempat ? '👁️ Lihat Foto' : 'Tidak ada foto';
+
+    const btnProduk = document.getElementById('btnViewFotoProduk');
+    btnProduk.disabled = !currentModalFotoProduk;
+    btnProduk.textContent = currentModalFotoProduk ? '👁️ Lihat Foto' : 'Tidak ada foto';
 
     document.getElementById('editMsg').textContent = '';
     document.getElementById('detailModal').classList.add('open');
@@ -1080,26 +1435,78 @@
     document.getElementById('detailModal').classList.remove('open');
   }
 
-  // Update cepat (Optimistic UI Update)
+  // ================= POPUP PREVIEW FOTO (KLIK UNDUH BARU BUKA TAB BARU) =================
+  function extractDriveFileId(url) {
+    if (!url) return '';
+    const m1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (m1) return m1[1];
+    const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (m2) return m2[1];
+    return '';
+  }
+
+  function openPhotoPopup(type) {
+    const url = type === 'tempat' ? currentModalFotoTempat : currentModalFotoProduk;
+    if (!url) return;
+
+    const titleEl = document.getElementById('photoPopupTitle');
+    const imgEl = document.getElementById('photoPopupImg');
+    const dlLink = document.getElementById('photoDownloadLink');
+
+    titleEl.textContent = type === 'tempat' ? '📸 Foto Tempat Pengiriman' : '📦 Foto Produk Pengiriman';
+
+    const fileId = extractDriveFileId(url);
+    if (fileId) {
+      // Thumbnail resolusi tinggi Google Drive agar tampil langsung di dalam popup tanpa buka tab baru
+      imgEl.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+      dlLink.href = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    } else {
+      imgEl.src = url;
+      dlLink.href = url;
+    }
+
+    document.getElementById('photoPopupModal').classList.add('open');
+  }
+
+  function closePhotoPopup() {
+    document.getElementById('photoPopupModal').classList.remove('open');
+    document.getElementById('photoPopupImg').src = '';
+  }
+
+  // Simpan perubahan dari Modal Detail & Edit
   document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const rowIndex = parseInt(document.getElementById('editRowIndex').value);
+    const statusVal = document.getElementById('editStatus').value;
+    const armadaVal = document.getElementById('editArmada').value;
+    const ruteVal = document.getElementById('editRute').value;
+
     const payload = {
       action: 'update',
       rowIndex: rowIndex,
       tanggal: document.getElementById('editTanggal').value,
-      armada: document.getElementById('editArmada').value,
-      rute: document.getElementById('editRute').value,
-      eta: document.getElementById('editEta').value,
-      etd: document.getElementById('editEtd').value,
+      armada: armadaVal,
+      rute: ruteVal,
+      eta: get24Time('editEtaHour', 'editEtaMin'),
+      etd: get24Time('editEtdHour', 'editEtdMin'),
       suhu: document.getElementById('editSuhu').value,
-      status: document.getElementById('editStatus').value
+      status: statusVal,
+      extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
+        status: statusVal,
+        armada: armadaVal,
+        customer: ruteVal,
+        noDokumen: document.getElementById('editExtraNoDokumen').value,
+        barang: document.getElementById('editExtraBarang').value,
+        keterangan: document.getElementById('editExtraKeterangan').value
+      } : null
     };
 
-    // Langsung perbarui tampilan Matrix tanpa menunggu reload penuh
     const targetIdx = allDeliveries.findIndex(d => d.rowIndex === rowIndex);
     if (targetIdx !== -1) {
       allDeliveries[targetIdx] = { ...allDeliveries[targetIdx], ...payload };
+      if (payload.extraDetail) {
+        allStatusDetails.push(payload.extraDetail);
+      }
       saveToLocalCache();
       renderMatrix();
     }
@@ -1113,7 +1520,7 @@
     }
   });
 
-  // ================= 5. PENGIRIMAN KILAT DI LATAR BELAKANG (TANPA MENUNGGU LAMA) =================
+  // ================= 5. PENGIRIMAN KILAT DI LATAR BELAKANG =================
   function updateQueueBadge() {
     const badge = document.getElementById('queueBadge');
     if (pendingUploads > 0) {
@@ -1138,9 +1545,10 @@
     const armadaVal = document.getElementById('armada').value;
     const ruteVal = document.getElementById('rute').value;
     const tanggalVal = document.getElementById('tanggal').value;
-    const etaVal = document.getElementById('eta').value;
-    const etdVal = document.getElementById('etd').value;
+    const etaVal = get24Time('etaHour', 'etaMin');
+    const etdVal = get24Time('etdHour', 'etdMin');
     const suhuVal = document.getElementById('suhu').value;
+    const isGrandMax = armadaVal.trim().toLowerCase().includes('grand max');
 
     const payload = {
       action: 'create',
@@ -1160,10 +1568,20 @@
         noDokumen: document.getElementById('extraNoDokumen').value,
         barang: document.getElementById('extraBarang').value,
         keterangan: document.getElementById('extraKeterangan').value
+      } : null,
+      grandMaxDetail: isGrandMax ? {
+        armada: armadaVal,
+        rute: ruteVal,
+        tanggal: tanggalVal,
+        kmAwal: parseFloat(document.getElementById('gmKmAwal').value) || 0,
+        kmAkhir: parseFloat(document.getElementById('gmKmAkhir').value) || 0,
+        bensin: parseFloat(document.getElementById('gmBensin').value) || 0,
+        tol: parseFloat(document.getElementById('gmTol').value) || 0,
+        parkir: parseFloat(document.getElementById('gmParkir').value) || 0,
+        total: parseFloat(document.getElementById('gmTotal').value) || 0
       } : null
     };
 
-    // 1. Tambahkan langsung ke daftar lokal (Optimistic UI) sehingga langsung muncul di Halaman 2
     const tempId = 'temp_' + Date.now();
     allDeliveries.push({
       rowIndex: tempId,
@@ -1177,23 +1595,28 @@
       suhu: suhuVal,
       status: statusVal
     });
+    if (payload.extraDetail) {
+      allStatusDetails.push(payload.extraDetail);
+    }
     saveToLocalCache();
 
-    // 2. Reset form seketika (< 10ms) agar driver bisa langsung input tujuan berikutnya tanpa menunggu!
+    // Reset form seketika
     const keptArmada = armadaVal;
     document.getElementById('driverForm').reset();
     document.getElementById('tanggal').value = tanggalVal;
-    document.getElementById('armada').value = keptArmada; // Pertahankan pilihan Armada terakhir agar lebih cepat!
+    document.getElementById('armada').value = keptArmada;
+    document.getElementById('gmTotal').value = 0;
     document.getElementById('extraStatusBox').classList.remove('show');
+    syncDynamicForms();
+
     base64FotoTempat = '';
     base64FotoProduk = '';
     document.getElementById('prevBoxTempat').style.display = 'none';
     document.getElementById('prevBoxProduk').style.display = 'none';
 
     msg.className = 'status-msg success';
-    msg.textContent = '⚡ Laporan tercatat! Mengirim foto ke Google Drive di latar belakang...';
+    msg.textContent = '⚡ Laporan tercatat! Mengirim ke Google Sheets di latar belakang...';
 
-    // 3. Kirim ke Google Apps Script secara asynchronous di latar belakang
     pendingUploads++;
     updateQueueBadge();
 
@@ -1214,7 +1637,6 @@
     .catch(err => {
       msg.className = 'status-msg error';
       msg.textContent = '❌ Gagal kirim ke server: ' + err.message;
-      // Hapus item sementara jika gagal
       allDeliveries = allDeliveries.filter(d => d.rowIndex !== tempId);
       saveToLocalCache();
     })
@@ -1224,13 +1646,9 @@
     });
   });
 
-  // Inisialisasi super cepat saat halaman dibuka
   window.addEventListener('DOMContentLoaded', () => {
-    // Muat cache lokal dalam 0ms agar dropdown Rute & Armada langsung terisi seketika
     loadFromLocalCache();
-    // Perbarui data dari Google Sheets di latar belakang tanpa memblokir layar
     syncDataBackground(false);
-    // Deteksi GPS di latar belakang
     setTimeout(() => detectLocation(false), 300);
   });
 </script>
