@@ -3,50 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logistics Tracing & Driver Report - Green Rebel</title>
+  <title>Green Rebel Logistics & Tracing</title>
   <style>
     :root {
-      --navy-dark: #1b2259;
-      --navy-header: #252e75;
-      --gold: #f5a623;
-      --bg-page: #f0f2f8;
+      --gr-green-dark: #006828;
+      --gr-green: #009b3a;
+      --gr-green-light: #e8f7ee;
+      --gr-green-border: #a7f3d0;
+      --gr-black: #111827;
+      --bg-page: #f3f6f4;
       --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --blue-btn: #2563eb;
-      --green: #10b981;
-      --red: #ef4444;
+      --border: #dce5df;
+      --text-main: #111827;
+      --text-muted: #526058;
+      --red: #dc2626;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { margin: 0; background-color: var(--bg-page); color: var(--text-main); }
 
-    /* TOP NAVBAR */
+    /* TOP NAVBAR (Tema Hijau & Hitam Khas Green Rebel) */
     .navbar {
-      background: linear-gradient(90deg, var(--navy-dark) 0%, var(--navy-header) 100%);
+      background: linear-gradient(90deg, #0b1a10 0%, #005c22 55%, #008a33 100%);
       color: #fff;
-      padding: 12px 24px;
+      padding: 10px 24px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon { font-size: 24px; }
-    .brand-title { font-weight: 700; font-size: 16px; line-height: 1.2; }
-    .brand-sub { font-size: 11px; color: #cbd5e1; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo-wrap {
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .logo-wrap img {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+    .brand-title { font-weight: 800; font-size: 16px; line-height: 1.2; letter-spacing: 0.2px; }
+    .brand-sub { font-size: 11px; color: #bbf7d0; }
 
     .nav-tabs { display: flex; gap: 8px; }
     .nav-btn {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.14);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 8px 15px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
@@ -54,25 +67,29 @@
       transition: all 0.2s;
     }
     .nav-btn.active {
-      background: var(--gold);
-      color: var(--navy-dark);
-      border-color: var(--gold);
+      background: #ffffff;
+      color: var(--gr-green-dark);
+      border-color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .sync-btn {
-      background: var(--gold);
-      color: var(--navy-dark);
-      border: none;
+      background: #111827;
+      color: #4ade80;
+      border: 1px solid #22c55e;
       padding: 8px 14px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      transition: all 0.15s;
     }
+    .sync-btn:hover { background: #1f2937; }
     .sync-btn:disabled { opacity: 0.7; cursor: wait; }
 
     /* CONTAINER */
-    .main-container { max-width: 1350px; margin: 20px auto; padding: 0 16px; }
+    .main-container { max-width: 1380px; margin: 20px auto; padding: 0 16px; }
     .page-section { display: none; }
     .page-section.active { display: block; }
 
@@ -83,14 +100,15 @@
       background: #fff;
       padding: 24px;
       border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
       border: 1px solid var(--border);
+      border-top: 4px solid var(--gr-green);
     }
-    .form-card h2 { margin-top: 0; text-align: center; color: var(--navy-dark); font-size: 19px; }
+    .form-card h2 { margin-top: 0; text-align: center; color: var(--gr-black); font-size: 19px; }
     .gps-banner {
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      color: var(--navy-dark);
+      background: var(--gr-green-light);
+      border: 1px solid var(--gr-green-border);
+      color: var(--gr-green-dark);
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 12px;
@@ -99,20 +117,21 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      font-weight: 600;
     }
     .gps-btn {
-      background: var(--navy-header);
+      background: var(--gr-green);
       color: #fff;
       border: none;
       padding: 5px 10px;
       border-radius: 6px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
     }
     .form-group { margin-bottom: 14px; }
-    label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #334155; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #1f2937; }
     input, select, textarea {
       width: 100%;
       padding: 11px 12px;
@@ -121,7 +140,7 @@
       font-size: 14px;
       background: #fff;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy-header); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gr-green); box-shadow: 0 0 0 3px rgba(0,155,58,0.12); }
     input[readonly] { background-color: #f1f5f9; color: #475569; font-weight: 600; cursor: not-allowed; }
 
     /* KOTAK FORM TAMBAHAN SAAT PENDING / CANCEL / RETUR */
@@ -168,11 +187,11 @@
       cursor: pointer;
       border: 1px solid #cbd5e1;
       background: #f8fafc;
-      color: var(--navy-dark);
+      color: var(--gr-black);
       transition: all 0.15s;
     }
-    .btn-photo-opt:hover { background: #eef2ff; border-color: var(--navy-header); }
-    .btn-camera { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .btn-photo-opt:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .btn-camera { background: var(--gr-green-light); border-color: #6ee7b7; color: var(--gr-green-dark); }
     .btn-camera:hover { background: #d1fae5; }
     .preview-box {
       margin-top: 8px;
@@ -189,12 +208,12 @@
       border-radius: 6px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
-    .preview-caption { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 4px; }
+    .preview-caption { font-size: 11px; color: var(--gr-green-dark); font-weight: 700; margin-top: 4px; }
 
     .submit-btn {
       width: 100%;
       padding: 13px;
-      background: var(--blue-btn);
+      background: var(--gr-green);
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -202,10 +221,12 @@
       font-weight: 700;
       cursor: pointer;
       margin-top: 8px;
+      transition: background 0.15s;
     }
-    .submit-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+    .submit-btn:hover { background: var(--gr-green-dark); }
+    .submit-btn:disabled { background: #86efac; cursor: not-allowed; }
     .status-msg { margin-top: 12px; text-align: center; font-weight: 600; font-size: 13px; }
-    .success { color: var(--green); }
+    .success { color: var(--gr-green-dark); }
     .error { color: var(--red); }
 
     /* ================= HALAMAN 2: MATRIX REVIEW PENGIRIMAN ================= */
@@ -214,6 +235,7 @@
       padding: 16px 20px;
       border-radius: 12px;
       border: 1px solid var(--border);
+      border-left: 5px solid var(--gr-green);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -222,10 +244,10 @@
       margin-bottom: 18px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
-    .filter-title h3 { margin: 0; font-size: 16px; color: var(--navy-dark); }
+    .filter-title h3 { margin: 0; font-size: 16px; color: var(--gr-black); font-weight: 800; }
     .filter-title p { margin: 3px 0 0; font-size: 12px; color: var(--text-muted); }
     .filter-controls { display: flex; gap: 10px; align-items: center; }
-    .filter-controls select { width: auto; padding: 8px 12px; font-weight: 600; }
+    .filter-controls select { width: auto; padding: 8px 12px; font-weight: 700; border-color: #cbd5e1; }
 
     .week-block {
       background: #fff;
@@ -237,8 +259,8 @@
     }
     .week-header {
       font-size: 14px;
-      font-weight: 700;
-      color: var(--navy-dark);
+      font-weight: 800;
+      color: var(--gr-green-dark);
       margin-bottom: 12px;
       display: flex;
       align-items: center;
@@ -246,7 +268,7 @@
     }
     .days-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
       gap: 12px;
     }
     .day-card {
@@ -256,49 +278,87 @@
       background: #f8fafc;
     }
     .day-header {
-      background: var(--navy-dark);
+      background: var(--gr-black);
       color: #fff;
       padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
+      border-bottom: 2px solid var(--gr-green);
     }
     .date-badge {
-      background: rgba(255,255,255,0.2);
+      background: var(--gr-green);
+      color: #fff;
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 11px;
+      font-weight: 700;
     }
-    .day-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .day-body { padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* KELOMPOK BERDASARKAN ARMADA DI DALAM HARI */
+    .armada-group {
+      background: #ffffff;
+      border: 1px solid #d1fae5;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .armada-group-header {
+      background: var(--gr-green-light);
+      color: var(--gr-green-dark);
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #bbf7d0;
+      text-transform: uppercase;
+    }
+    .armada-count {
+      background: var(--gr-green-dark);
+      color: #fff;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+    }
+    .armada-items {
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
     .route-pill {
-      background: #fff;
+      background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 8px 10px;
+      border-radius: 6px;
+      padding: 7px 9px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 6px;
       cursor: pointer;
       transition: all 0.15s;
     }
     .route-pill:hover {
-      border-color: var(--navy-header);
-      background: #eef2ff;
+      border-color: var(--gr-green);
+      background: var(--gr-green-light);
       transform: translateY(-1px);
     }
     .route-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
     .route-name {
       font-size: 12px;
       font-weight: 700;
-      color: var(--navy-dark);
+      color: var(--gr-black);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .route-meta { font-size: 11px; color: var(--text-muted); }
+    .route-meta { font-size: 10.5px; color: var(--text-muted); }
     .status-badge {
       font-size: 10px;
       font-weight: 700;
@@ -316,7 +376,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(17, 24, 39, 0.65);
       z-index: 200;
       align-items: center;
       justify-content: center;
@@ -331,6 +391,7 @@
       overflow-y: auto;
       border-radius: 14px;
       padding: 22px;
+      border-top: 5px solid var(--gr-green);
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
     .modal-header {
@@ -341,7 +402,7 @@
       padding-bottom: 10px;
       margin-bottom: 14px;
     }
-    .modal-header h3 { margin: 0; font-size: 17px; color: var(--navy-dark); }
+    .modal-header h3 { margin: 0; font-size: 17px; color: var(--gr-black); }
     .close-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b; }
     .photo-links {
       display: grid;
@@ -350,8 +411,8 @@
       margin-bottom: 14px;
     }
     .photo-box {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
+      background: var(--gr-green-light);
+      border: 1px solid #a7f3d0;
       border-radius: 8px;
       padding: 10px;
       text-align: center;
@@ -360,21 +421,24 @@
     .photo-box a {
       display: inline-block;
       margin-top: 4px;
-      color: var(--blue-btn);
-      font-weight: 700;
+      color: var(--gr-green-dark);
+      font-weight: 800;
       text-decoration: none;
     }
     .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
-    .btn-save-edit { flex: 1; background: var(--green); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .btn-save-edit { flex: 1; background: var(--gr-green); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .btn-save-edit:hover { background: var(--gr-green-dark); }
     .btn-cancel-edit { background: #e2e8f0; color: #334155; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAVBAR DENGAN LOGO GREEN REBEL -->
   <div class="navbar">
     <div class="brand">
-      <div class="brand-icon">🚚</div>
+      <div class="logo-wrap">
+        <img src="data:image/png;base64,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" alt="Green Rebel Logo">
+      </div>
       <div>
         <div class="brand-title">Green Rebel Logistics & Tracing</div>
         <div class="brand-sub">Sistem Laporan & Monitoring Pengiriman Driver</div>
@@ -405,12 +469,23 @@
             <label for="tanggal">Tanggal</label>
             <input type="date" id="tanggal" required>
           </div>
+
+          <!-- ARMADA (DIAMBIL UNIK DARI TAB ROUTING KOLOM E) -->
+          <div class="form-group">
+            <label for="armada">Armada</label>
+            <select id="armada" required onchange="syncExtraFields()">
+              <option value="">Memuat daftar armada...</option>
+            </select>
+          </div>
+
+          <!-- RUTE / CUSTOMER (DIAMBIL UNIK DARI TAB ROUTING KOLOM C) -->
           <div class="form-group">
             <label for="rute">Rute (Customer / Tujuan)</label>
-            <select id="rute" required onchange="syncCustomerField()">
+            <select id="rute" required onchange="syncExtraFields()">
               <option value="">Memuat daftar rute...</option>
             </select>
           </div>
+
           <div class="form-group">
             <label for="eta">ETA (Jam Tiba)</label>
             <input type="time" id="eta" required>
@@ -475,6 +550,11 @@
             </div>
 
             <div class="form-group">
+              <label for="extraArmada">Armada (Otomatis dari Form Awal)</label>
+              <input type="text" id="extraArmada" readonly placeholder="Otomatis terisi sesuai Armada di atas">
+            </div>
+
+            <div class="form-group">
               <label for="extraCustomer">Customer (Otomatis dari Rute)</label>
               <input type="text" id="extraCustomer" readonly placeholder="Otomatis terisi sesuai Rute di atas">
             </div>
@@ -505,8 +585,8 @@
     <div id="page2" class="page-section">
       <div class="filter-bar">
         <div class="filter-title">
-          <h3>📅 MATRIX REVIEW PENGIRIMAN BULANAN</h3>
-          <p>Klik pada item Rute / Customer untuk melihat detail foto & edit data langsung ke Google Sheets</p>
+          <h3>📅 MATRIX REVIEW PENGIRIMAN BULANAN (PER ARMADA)</h3>
+          <p>Data dikelompokkan otomatis berdasarkan Armada. Klik pada item Customer untuk melihat foto & edit ke Google Sheets</p>
         </div>
         <div class="filter-controls">
           <label style="margin:0;">Bulan:</label>
@@ -534,7 +614,7 @@
       </div>
 
       <div id="matrixContainer">
-        <div style="text-align:center; padding:40px; color:#64748b;">Memuat data dari Google Sheets...</div>
+        <div style="text-align:center; padding:40px; color:#526058;">Memuat data dari Google Sheets...</div>
       </div>
     </div>
 
@@ -564,6 +644,10 @@
         <div class="form-group">
           <label>Tanggal</label>
           <input type="date" id="editTanggal" required>
+        </div>
+        <div class="form-group">
+          <label>Armada</label>
+          <select id="editArmada" required></select>
         </div>
         <div class="form-group">
           <label>Rute (Customer / Tujuan)</label>
@@ -608,21 +692,20 @@
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJVXvi6XmTqsYugyyniEVi3UdGbBnOR5jtQyerhqMRI2weOmISSeUFcokfQzTp6zEp/exec';
 
   let allRoutes = [];
+  let allArmadas = [];
   let allDeliveries = [];
   let base64FotoTempat = '';
   let base64FotoProduk = '';
   let currentLocationText = 'Mencari koordinat GPS...';
 
-  // Set default tanggal & filter bulan/tahun sekarang
   const today = new Date();
   document.getElementById('tanggal').valueAsDate = today;
   document.getElementById('filterBulan').value = today.getMonth();
   document.getElementById('filterTahun').value = today.getFullYear();
 
-  // ================= SINKRONISASI OTOMATIS CUSTOMER & FORM TAMBAHAN =================
-  function syncCustomerField() {
-    const ruteVal = document.getElementById('rute').value;
-    document.getElementById('extraCustomer').value = ruteVal;
+  function syncExtraFields() {
+    document.getElementById('extraArmada').value = document.getElementById('armada').value;
+    document.getElementById('extraCustomer').value = document.getElementById('rute').value;
   }
 
   function toggleExtraStatusForm() {
@@ -635,7 +718,7 @@
     if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
       extraBox.classList.add('show');
       document.getElementById('extraStatus').value = statusVal;
-      syncCustomerField();
+      syncExtraFields();
       noDokInput.required = true;
       barangInput.required = true;
       ketInput.required = true;
@@ -647,7 +730,6 @@
     }
   }
 
-  // ================= DETEKSI LOKASI GPS & NAMA ALAMAT =================
   function detectLocation() {
     const gpsLabel = document.getElementById('gpsStatusText');
     gpsLabel.textContent = '📍 Mendeteksi lokasi GPS...';
@@ -683,7 +765,6 @@
     );
   }
 
-  // ================= PROSES FOTO + WATERMARK GREEN REBEL, JAM & LOKASI =================
   function handlePhotoSelect(inputEl, type) {
     const file = inputEl.files[0];
     if (!file) return;
@@ -707,17 +788,18 @@
         const tglStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
         const jamStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
         const ruteVal = document.getElementById('rute').value;
+        const armadaVal = document.getElementById('armada').value;
 
         const barHeight = 96;
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+        ctx.fillStyle = 'rgba(11, 26, 16, 0.78)';
         ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
 
-        ctx.fillStyle = '#10b981';
+        ctx.fillStyle = '#009b3a';
         ctx.fillRect(0, canvas.height - barHeight, 10, barHeight);
 
-        ctx.fillStyle = '#34d399';
+        ctx.fillStyle = '#4ade80';
         ctx.font = 'bold 20px sans-serif';
-        ctx.fillText('🌱 GREEN REBEL LOGISTICS', 22, canvas.height - 64);
+        ctx.fillText('🌱 GREEN REBEL LOGISTICS' + (armadaVal ? ` [${armadaVal}]` : ''), 22, canvas.height - 64);
 
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 15px sans-serif';
@@ -744,7 +826,6 @@
     };
   }
 
-  // Navigasi antar Halaman 1 dan Halaman 2
   function switchPage(pageId) {
     document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -757,7 +838,6 @@
     }
   }
 
-  // Ambil data Rute & Data Pengiriman dari Google Sheets
   async function loadAllData() {
     const syncBtn = document.getElementById('syncBtn');
     syncBtn.disabled = true;
@@ -767,10 +847,11 @@
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
       
+      allArmadas = data.armadas || [];
       allRoutes = data.routes || [];
       allDeliveries = data.deliveries || [];
 
-      populateRouteDropdowns();
+      populateDropdowns();
       renderMatrix();
     } catch (err) {
       alert('Gagal mengambil data dari Google Sheets. Pastikan Apps Script sudah di-deploy ulang.');
@@ -780,20 +861,27 @@
     }
   }
 
-  function populateRouteDropdowns() {
-    const select1 = document.getElementById('rute');
-    const selectEdit = document.getElementById('editRute');
-    
-    select1.innerHTML = '<option value="">-- Pilih Rute --</option>';
-    selectEdit.innerHTML = '<option value="">-- Pilih Rute --</option>';
+  function populateDropdowns() {
+    const selectArmada1 = document.getElementById('armada');
+    const selectArmadaEdit = document.getElementById('editArmada');
+    selectArmada1.innerHTML = '<option value="">-- Pilih Armada --</option>';
+    selectArmadaEdit.innerHTML = '<option value="">-- Pilih Armada --</option>';
+    allArmadas.forEach(a => {
+      selectArmada1.add(new Option(a, a));
+      selectArmadaEdit.add(new Option(a, a));
+    });
 
+    const selectRute1 = document.getElementById('rute');
+    const selectRuteEdit = document.getElementById('editRute');
+    selectRute1.innerHTML = '<option value="">-- Pilih Rute --</option>';
+    selectRuteEdit.innerHTML = '<option value="">-- Pilih Rute --</option>';
     allRoutes.forEach(r => {
-      select1.add(new Option(r, r));
-      selectEdit.add(new Option(r, r));
+      selectRute1.add(new Option(r, r));
+      selectRuteEdit.add(new Option(r, r));
     });
   }
 
-  // Render Kalender Mingguan di Halaman 2
+  // Render Kalender Mingguan di Halaman 2 yang Dikelompokkan Berdasarkan Armada
   function renderMatrix() {
     const container = document.getElementById('matrixContainer');
     const month = parseInt(document.getElementById('filterBulan').value);
@@ -836,15 +924,35 @@
         if (items.length === 0) {
           html += `<div class="empty-day">Belum ada pengiriman</div>`;
         } else {
+          // Kelompokkan item hari ini berdasarkan Armada
+          const groupedByArmada = {};
           items.forEach(item => {
-            const stClass = 'st-' + (item.status || '').toLowerCase();
-            html += `<div class="route-pill" onclick="openDetailModal(${item.rowIndex})">
-              <div class="route-info">
-                <div class="route-name" title="${item.rute}">🚚 ${item.rute}</div>
-                <div class="route-meta">ETA: ${item.eta || '-'} | ETD: ${item.etd || '-'} | ${item.suhu || '-'}</div>
+            const armKey = (item.armada && item.armada.trim() !== '') ? item.armada.trim() : 'TANPA ARMADA';
+            if (!groupedByArmada[armKey]) groupedByArmada[armKey] = [];
+            groupedByArmada[armKey].push(item);
+          });
+
+          Object.keys(groupedByArmada).sort().forEach(armName => {
+            const armItems = groupedByArmada[armName];
+            html += `<div class="armada-group">
+              <div class="armada-group-header">
+                <span>🚚 ${armName}</span>
+                <span class="armada-count">${armItems.length} tujuan</span>
               </div>
-              <span class="status-badge ${stClass}">${item.status || '-'}</span>
-            </div>`;
+              <div class="armada-items">`;
+
+            armItems.forEach(item => {
+              const stClass = 'st-' + (item.status || '').toLowerCase();
+              html += `<div class="route-pill" onclick="openDetailModal(${item.rowIndex})">
+                <div class="route-info">
+                  <div class="route-name" title="${item.rute}">${item.rute}</div>
+                  <div class="route-meta">ETA: ${item.eta || '-'} | ETD: ${item.etd || '-'} | ${item.suhu || '-'}</div>
+                </div>
+                <span class="status-badge ${stClass}">${item.status || '-'}</span>
+              </div>`;
+            });
+
+            html += `</div></div>`;
           });
         }
 
@@ -857,7 +965,6 @@
     container.innerHTML = html;
   }
 
-  // Buka Modal Detail & Edit saat item diklik
   function openDetailModal(rowIndex) {
     const item = allDeliveries.find(d => d.rowIndex === rowIndex);
     if (!item) return;
@@ -865,11 +972,17 @@
     document.getElementById('editRowIndex').value = item.rowIndex;
     document.getElementById('editTanggal').value = item.tanggal;
     
+    const editArmadaSelect = document.getElementById('editArmada');
+    if (item.armada && ![...editArmadaSelect.options].some(o => o.value === item.armada)) {
+      editArmadaSelect.add(new Option(item.armada, item.armada));
+    }
+    editArmadaSelect.value = item.armada || '';
+
     const editRuteSelect = document.getElementById('editRute');
-    if (![...editRuteSelect.options].some(o => o.value === item.rute)) {
+    if (item.rute && ![...editRuteSelect.options].some(o => o.value === item.rute)) {
       editRuteSelect.add(new Option(item.rute, item.rute));
     }
-    editRuteSelect.value = item.rute;
+    editRuteSelect.value = item.rute || '';
 
     document.getElementById('editEta').value = item.eta;
     document.getElementById('editEtd').value = item.etd;
@@ -902,7 +1015,6 @@
     document.getElementById('detailModal').classList.remove('open');
   }
 
-  // Simpan hasil Edit dari Halaman 2 ke Google Sheets
   document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('saveEditBtn');
@@ -914,6 +1026,7 @@
       action: 'update',
       rowIndex: parseInt(document.getElementById('editRowIndex').value),
       tanggal: document.getElementById('editTanggal').value,
+      armada: document.getElementById('editArmada').value,
       rute: document.getElementById('editRute').value,
       eta: document.getElementById('editEta').value,
       etd: document.getElementById('editEtd').value,
@@ -944,7 +1057,6 @@
     }
   });
 
-  // Kirim Laporan Baru dari Halaman 1
   document.getElementById('driverForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
@@ -961,12 +1073,14 @@
     msg.textContent = '';
 
     const statusVal = document.getElementById('status').value;
+    const armadaVal = document.getElementById('armada').value;
     const ruteVal = document.getElementById('rute').value;
 
     try {
       const payload = {
         action: 'create',
         tanggal: document.getElementById('tanggal').value,
+        armada: armadaVal,
         rute: ruteVal,
         eta: document.getElementById('eta').value,
         fotoTempat: base64FotoTempat,
@@ -974,9 +1088,9 @@
         etd: document.getElementById('etd').value,
         suhu: document.getElementById('suhu').value,
         status: statusVal,
-        // Data tambahan jika Status Pending / Cancel / Retur
         extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
           status: statusVal,
+          armada: armadaVal,
           customer: ruteVal,
           noDokumen: document.getElementById('extraNoDokumen').value,
           barang: document.getElementById('extraBarang').value,
@@ -1015,7 +1129,6 @@
     }
   });
 
-  // Jalankan saat halaman dibuka
   window.addEventListener('DOMContentLoaded', () => {
     detectLocation();
     loadAllData();
