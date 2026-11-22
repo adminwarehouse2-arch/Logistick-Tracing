@@ -113,7 +113,7 @@
     }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #334155; }
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 11px 12px;
       border: 1px solid #cbd5e1;
@@ -121,7 +121,34 @@
       font-size: 14px;
       background: #fff;
     }
-    input:focus, select:focus { outline: none; border-color: var(--navy-header); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy-header); }
+    input[readonly] { background-color: #f1f5f9; color: #475569; font-weight: 600; cursor: not-allowed; }
+
+    /* KOTAK FORM TAMBAHAN SAAT PENDING / CANCEL / RETUR */
+    .extra-status-box {
+      display: none;
+      background: #fffbeb;
+      border: 1.5px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .extra-status-box.show { display: block; animation: fadeIn 0.25s ease; }
+    .extra-status-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #b45309;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px dashed #fcd34d;
+      padding-bottom: 8px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* TOMBOL KAMERA & GALERI */
     .photo-picker-group {
@@ -380,7 +407,7 @@
           </div>
           <div class="form-group">
             <label for="rute">Rute (Customer / Tujuan)</label>
-            <select id="rute" required>
+            <select id="rute" required onchange="syncCustomerField()">
               <option value="">Memuat daftar rute...</option>
             </select>
           </div>
@@ -429,7 +456,7 @@
           </div>
           <div class="form-group">
             <label for="status">Status</label>
-            <select id="status" required>
+            <select id="status" required onchange="toggleExtraStatusForm()">
               <option value="">-- Pilih Status --</option>
               <option value="Terkirim">Terkirim</option>
               <option value="Pending">Pending</option>
@@ -437,6 +464,37 @@
               <option value="Retur">Retur</option>
             </select>
           </div>
+
+          <!-- FORM TAMBAHAN MUNCUL OTOMATIS JIKA PENDING / CANCEL / RETUR -->
+          <div id="extraStatusBox" class="extra-status-box">
+            <div class="extra-status-title">⚠️ Detail Status Pengiriman (Pending / Cancel / Retur)</div>
+            
+            <div class="form-group">
+              <label for="extraStatus">Status</label>
+              <input type="text" id="extraStatus" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="extraCustomer">Customer (Otomatis dari Rute)</label>
+              <input type="text" id="extraCustomer" readonly placeholder="Otomatis terisi sesuai Rute di atas">
+            </div>
+
+            <div class="form-group">
+              <label for="extraNoDokumen">No Dokumen</label>
+              <input type="text" id="extraNoDokumen" placeholder="Masukkan No SJ / Invoice / DO">
+            </div>
+
+            <div class="form-group">
+              <label for="extraBarang">Barang</label>
+              <input type="text" id="extraBarang" placeholder="Nama & Qty barang yang di-pending/retur/cancel">
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="extraKeterangan">Keterangan</label>
+              <textarea id="extraKeterangan" rows="2" placeholder="Alasan pending / retur / cancel..."></textarea>
+            </div>
+          </div>
+
           <button type="submit" class="submit-btn" id="submitBtn">Kirim Laporan</button>
           <div id="msg" class="status-msg"></div>
         </form>
@@ -561,6 +619,34 @@
   document.getElementById('filterBulan').value = today.getMonth();
   document.getElementById('filterTahun').value = today.getFullYear();
 
+  // ================= SINKRONISASI OTOMATIS CUSTOMER & FORM TAMBAHAN =================
+  function syncCustomerField() {
+    const ruteVal = document.getElementById('rute').value;
+    document.getElementById('extraCustomer').value = ruteVal;
+  }
+
+  function toggleExtraStatusForm() {
+    const statusVal = document.getElementById('status').value;
+    const extraBox = document.getElementById('extraStatusBox');
+    const noDokInput = document.getElementById('extraNoDokumen');
+    const barangInput = document.getElementById('extraBarang');
+    const ketInput = document.getElementById('extraKeterangan');
+
+    if (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') {
+      extraBox.classList.add('show');
+      document.getElementById('extraStatus').value = statusVal;
+      syncCustomerField();
+      noDokInput.required = true;
+      barangInput.required = true;
+      ketInput.required = true;
+    } else {
+      extraBox.classList.remove('show');
+      noDokInput.required = false;
+      barangInput.required = false;
+      ketInput.required = false;
+    }
+  }
+
   // ================= DETEKSI LOKASI GPS & NAMA ALAMAT =================
   function detectLocation() {
     const gpsLabel = document.getElementById('gpsStatusText');
@@ -579,7 +665,6 @@
         currentLocationText = `Lat: ${lat}, Lng: ${lon}`;
         gpsLabel.textContent = `✅ Lokasi aktif: ${lat}, ${lon}`;
 
-        // Ambil nama jalan/kecamatan secara otomatis (Reverse Geocoding gratis)
         try {
           const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16`);
           const geo = await resp.json();
@@ -588,9 +673,7 @@
             currentLocationText = `${shortAddr} (${lat}, ${lon})`;
             gpsLabel.textContent = `✅ Lokasi: ${shortAddr}`;
           }
-        } catch (e) {
-          // Tetap gunakan koordinat Lat/Lng jika gagal ambil nama jalan
-        }
+        } catch (e) {}
       },
       (err) => {
         currentLocationText = 'Lokasi GPS tidak diizinkan / mati';
@@ -620,33 +703,27 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // Waktu & Tanggal real-time saat foto diambil/dipilih
         const now = new Date();
         const tglStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
         const jamStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
         const ruteVal = document.getElementById('rute').value;
 
-        // Gambar kotak latar gelap transparan di bagian bawah foto
         const barHeight = 96;
         ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
         ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
 
-        // Garis aksen hijau khas Green Rebel di sisi kiri stempel
         ctx.fillStyle = '#10b981';
         ctx.fillRect(0, canvas.height - barHeight, 10, barHeight);
 
-        // Teks Baris 1: GREEN REBEL LOGISTICS
         ctx.fillStyle = '#34d399';
         ctx.font = 'bold 20px sans-serif';
         ctx.fillText('🌱 GREEN REBEL LOGISTICS', 22, canvas.height - 64);
 
-        // Teks Baris 2: Tanggal & Jam + Rute
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 15px sans-serif';
         const line2 = `🕒 ${tglStr} • ${jamStr}` + (ruteVal ? ` | 📍 Tujuan: ${ruteVal}` : '');
         ctx.fillText(line2, 22, canvas.height - 39);
 
-        // Teks Baris 3: Lokasi GPS saat foto
         ctx.fillStyle = '#e2e8f0';
         ctx.font = '13px sans-serif';
         const locDisplay = `📌 ${currentLocationText}`;
@@ -883,17 +960,28 @@
     btn.textContent = 'Mengirim data & foto...';
     msg.textContent = '';
 
+    const statusVal = document.getElementById('status').value;
+    const ruteVal = document.getElementById('rute').value;
+
     try {
       const payload = {
         action: 'create',
         tanggal: document.getElementById('tanggal').value,
-        rute: document.getElementById('rute').value,
+        rute: ruteVal,
         eta: document.getElementById('eta').value,
         fotoTempat: base64FotoTempat,
         fotoProduk: base64FotoProduk,
         etd: document.getElementById('etd').value,
         suhu: document.getElementById('suhu').value,
-        status: document.getElementById('status').value
+        status: statusVal,
+        // Data tambahan jika Status Pending / Cancel / Retur
+        extraDetail: (statusVal === 'Pending' || statusVal === 'Cancel' || statusVal === 'Retur') ? {
+          status: statusVal,
+          customer: ruteVal,
+          noDokumen: document.getElementById('extraNoDokumen').value,
+          barang: document.getElementById('extraBarang').value,
+          keterangan: document.getElementById('extraKeterangan').value
+        } : null
       };
 
       const res = await fetch(SCRIPT_URL, {
@@ -904,9 +992,12 @@
 
       if (result.status === 'success') {
         msg.className = 'status-msg success';
-        msg.textContent = '✅ Laporan berhasil masuk ke Sheets!';
+        msg.textContent = (payload.extraDetail)
+          ? '✅ Laporan masuk ke Armada Pengiriman & Status Pengiriman!'
+          : '✅ Laporan berhasil masuk ke Sheets!';
         document.getElementById('driverForm').reset();
         document.getElementById('tanggal').valueAsDate = new Date();
+        document.getElementById('extraStatusBox').classList.remove('show');
         base64FotoTempat = '';
         base64FotoProduk = '';
         document.getElementById('prevBoxTempat').style.display = 'none';
