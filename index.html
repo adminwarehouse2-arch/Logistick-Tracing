@@ -711,7 +711,7 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="loginUserId">USER ID</label>
-          <input type="text" id="loginUserId" placeholder="Contoh: MIJI / GRANDMAX / ADMIN / VIEW" required autocomplete="username">
+          <input type="text" id="loginUserId" placeholder="Masukkan USER ID" required autocomplete="username">
         </div>
         <div class="form-group">
           <label for="loginPassword">Password (PW)</label>
@@ -1696,7 +1696,7 @@
         renderMatrix();
       }
       if (loginSyncNote) {
-        loginSyncNote.textContent = `✅ Terhubung (${allUsers.length} akun terdaftar)`;
+        loginSyncNote.textContent = `✅ Terhubung ke Sistem`;
       }
     } catch (err) {
       if (loginSyncNote) {
