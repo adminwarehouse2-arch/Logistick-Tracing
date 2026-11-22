@@ -247,6 +247,78 @@
       cursor: not-allowed;
     }
 
+    /* SEARCHABLE DROPDOWN RUTE */
+    .searchable-select-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .searchable-input {
+      padding-right: 36px;
+      cursor: text;
+    }
+    .searchable-clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #e2e8f0;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      line-height: 1;
+      color: #475569;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .searchable-clear-btn:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+    .searchable-dropdown-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      max-height: 230px;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 1.5px solid var(--gr-green);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
+      z-index: 150;
+      display: none;
+    }
+    .searchable-dropdown-list.open {
+      display: block;
+    }
+    .searchable-option-item {
+      padding: 10px 12px;
+      font-size: 13.5px;
+      color: var(--gr-black);
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .searchable-option-item:last-child {
+      border-bottom: none;
+    }
+    .searchable-option-item:hover,
+    .searchable-option-item.highlighted {
+      background: var(--gr-green-light);
+      color: var(--gr-green-dark);
+      font-weight: 700;
+    }
+    .searchable-empty {
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
     /* TIME 24-JAM TANPA AM/PM */
     .time-24-wrap {
       display: flex;
@@ -778,10 +850,15 @@
             </div>
 
             <div class="form-group">
-              <label for="rute">Rute (Customer / Tujuan)</label>
-              <select id="rute" required onchange="syncDynamicForms()">
-                <option value="">-- Pilih Rute --</option>
-              </select>
+              <label for="rute">Rute (Customer / Tujuan) <span class="opt-tag">(Ketik untuk mencari atau pilih)</span></label>
+              <div class="searchable-select-wrap" id="ruteSearchWrap">
+                <input type="text" id="rute" class="searchable-input" placeholder="-- Ketik / Pilih Rute --" autocomplete="off" required
+                  onfocus="openRuteDropdown('rute', 'ruteList')"
+                  oninput="filterRuteDropdown('rute', 'ruteList'); syncDynamicForms(); toggleClearBtn('rute', 'ruteClearBtn')"
+                  onkeydown="handleRuteKeydown(event, 'rute', 'ruteList')">
+                <button type="button" id="ruteClearBtn" class="searchable-clear-btn" title="Hapus teks" onclick="clearRuteInput('rute', 'ruteList', 'ruteClearBtn', false)">&times;</button>
+                <div id="ruteList" class="searchable-dropdown-list"></div>
+              </div>
             </div>
 
             <!-- FORM KHUSUS GRAND MAX -->
@@ -1101,8 +1178,15 @@
           <select id="editArmada" required onchange="syncEditDynamicForms()"></select>
         </div>
         <div class="form-group">
-          <label>Rute (Customer / Tujuan)</label>
-          <select id="editRute" required onchange="syncEditDynamicForms()"></select>
+          <label>Rute (Customer / Tujuan) <span class="opt-tag">(Ketik untuk mencari atau pilih)</span></label>
+          <div class="searchable-select-wrap" id="editRuteSearchWrap">
+            <input type="text" id="editRute" class="searchable-input" placeholder="-- Ketik / Pilih Rute --" autocomplete="off" required
+              onfocus="openRuteDropdown('editRute', 'editRuteList')"
+              oninput="filterRuteDropdown('editRute', 'editRuteList'); syncEditDynamicForms(); toggleClearBtn('editRute', 'editRuteClearBtn')"
+              onkeydown="handleRuteKeydown(event, 'editRute', 'editRuteList')">
+            <button type="button" id="editRuteClearBtn" class="searchable-clear-btn" title="Hapus teks" onclick="clearRuteInput('editRute', 'editRuteList', 'editRuteClearBtn', true)">&times;</button>
+            <div id="editRuteList" class="searchable-dropdown-list"></div>
+          </div>
         </div>
 
         <!-- FORM EDIT OPERASIONAL GRAND MAX DI HALAMAN 2 -->
@@ -1848,26 +1932,112 @@
     selectArmadaEdit.innerHTML = '';
     selectArmadaEdit.appendChild(fragArmEdit);
 
-    const selectRute1 = document.getElementById('rute');
-    const selectRuteEdit = document.getElementById('editRute');
-    const prevRute = selectRute1.value;
-
-    const fragRute1 = document.createDocumentFragment();
-    fragRute1.appendChild(new Option('-- Pilih Rute --', ''));
-    const fragRuteEdit = document.createDocumentFragment();
-    fragRuteEdit.appendChild(new Option('-- Pilih Rute --', ''));
-
-    allRoutes.forEach(r => {
-      fragRute1.appendChild(new Option(r, r));
-      fragRuteEdit.appendChild(new Option(r, r));
-    });
-    selectRute1.innerHTML = '';
-    selectRute1.appendChild(fragRute1);
-    if (prevRute) selectRute1.value = prevRute;
-
-    selectRuteEdit.innerHTML = '';
-    selectRuteEdit.appendChild(fragRuteEdit);
+    renderRuteListItems('rute', 'ruteList', document.getElementById('rute').value);
+    renderRuteListItems('editRute', 'editRuteList', document.getElementById('editRute').value);
   }
+
+  // ================= LOGIKA SEARCHABLE DROPDOWN RUTE =================
+  function toggleClearBtn(inputId, clearBtnId) {
+    const inp = document.getElementById(inputId);
+    const btn = document.getElementById(clearBtnId);
+    if (!inp || !btn) return;
+    btn.style.display = (!inp.disabled && inp.value.length > 0) ? 'flex' : 'none';
+  }
+
+  function clearRuteInput(inputId, listId, clearBtnId, isEdit) {
+    const inp = document.getElementById(inputId);
+    if (inp.disabled) return;
+    inp.value = '';
+    toggleClearBtn(inputId, clearBtnId);
+    renderRuteListItems(inputId, listId, '');
+    document.getElementById(listId).classList.add('open');
+    inp.focus();
+    if (isEdit) syncEditDynamicForms();
+    else syncDynamicForms();
+  }
+
+  function openRuteDropdown(inputId, listId) {
+    const inp = document.getElementById(inputId);
+    if (inp.disabled) return;
+    // Tampilkan semua pilihan saat fokus pertama kali agar mudah dipilih atau diketik
+    renderRuteListItems(inputId, listId, '');
+    document.getElementById(listId).classList.add('open');
+  }
+
+  function filterRuteDropdown(inputId, listId) {
+    const inp = document.getElementById(inputId);
+    if (inp.disabled) return;
+    renderRuteListItems(inputId, listId, inp.value);
+    document.getElementById(listId).classList.add('open');
+  }
+
+  function renderRuteListItems(inputId, listId, keyword) {
+    const listEl = document.getElementById(listId);
+    if (!listEl) return;
+    const q = String(keyword || '').trim().toLowerCase();
+    const filtered = q
+      ? allRoutes.filter(r => String(r).toLowerCase().includes(q))
+      : allRoutes;
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `<div class="searchable-empty">Tidak ada rute cocok dengan "${keyword}" (tetap bisa disimpan)</div>`;
+      return;
+    }
+
+    const isEdit = inputId === 'editRute';
+    const clearBtnId = isEdit ? 'editRuteClearBtn' : 'ruteClearBtn';
+    listEl.innerHTML = filtered.map(r => {
+      const safeVal = String(r).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return `<div class="searchable-option-item" onmousedown="selectRuteOption('${inputId}', '${listId}', '${clearBtnId}', '${safeVal}', ${isEdit})">${r}</div>`;
+    }).join('');
+  }
+
+  function selectRuteOption(inputId, listId, clearBtnId, val, isEdit) {
+    const inp = document.getElementById(inputId);
+    inp.value = val;
+    document.getElementById(listId).classList.remove('open');
+    toggleClearBtn(inputId, clearBtnId);
+    if (isEdit) syncEditDynamicForms();
+    else syncDynamicForms();
+  }
+
+  function handleRuteKeydown(e, inputId, listId) {
+    const listEl = document.getElementById(listId);
+    if (!listEl.classList.contains('open')) return;
+    const items = listEl.querySelectorAll('.searchable-option-item');
+    if (!items.length) return;
+
+    let activeIdx = [...items].findIndex(el => el.classList.contains('highlighted'));
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (activeIdx >= 0) items[activeIdx].classList.remove('highlighted');
+      activeIdx = (activeIdx + 1) % items.length;
+      items[activeIdx].classList.add('highlighted');
+      items[activeIdx].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (activeIdx >= 0) items[activeIdx].classList.remove('highlighted');
+      activeIdx = (activeIdx - 1 + items.length) % items.length;
+      items[activeIdx].classList.add('highlighted');
+      items[activeIdx].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter' && activeIdx >= 0) {
+      e.preventDefault();
+      items[activeIdx].dispatchEvent(new MouseEvent('mousedown'));
+    } else if (e.key === 'Escape') {
+      listEl.classList.remove('open');
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const wrap1 = document.getElementById('ruteSearchWrap');
+    const wrap2 = document.getElementById('editRuteSearchWrap');
+    if (wrap1 && !wrap1.contains(e.target)) {
+      document.getElementById('ruteList').classList.remove('open');
+    }
+    if (wrap2 && !wrap2.contains(e.target)) {
+      document.getElementById('editRuteList').classList.remove('open');
+    }
+  });
 
   function renderMatrix() {
     const container = document.getElementById('matrixContainer');
@@ -2063,11 +2233,8 @@
     }
     editArmadaSelect.value = item.armada || '';
 
-    const editRuteSelect = document.getElementById('editRute');
-    if (item.rute && ![...editRuteSelect.options].some(o => o.value === item.rute)) {
-      editRuteSelect.add(new Option(item.rute, item.rute));
-    }
-    editRuteSelect.value = item.rute || '';
+    const editRuteInput = document.getElementById('editRute');
+    editRuteInput.value = item.rute || '';
 
     set24Time('editEtaHour', 'editEtaMin', item.eta);
     set24Time('editEtdHour', 'editEtdMin', item.etd);
@@ -2143,6 +2310,7 @@
     }
 
     applyModalEditPermission(canEdit);
+    toggleClearBtn('editRute', 'editRuteClearBtn');
 
     document.getElementById('editMsg').textContent = '';
     document.getElementById('detailModal').classList.add('open');
@@ -2378,6 +2546,8 @@
     document.getElementById('driverForm').reset();
     document.getElementById('tanggal').value = tanggalVal;
     document.getElementById('armada').value = keptArmada;
+    document.getElementById('rute').value = '';
+    toggleClearBtn('rute', 'ruteClearBtn');
     document.getElementById('gmTotal').value = 0;
     document.getElementById('extraStatusBox').classList.remove('show');
     syncDynamicForms();
