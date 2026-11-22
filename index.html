@@ -939,9 +939,37 @@
                 <input type="text" id="extraBarang" placeholder="Nama & Qty barang yang di-pending/retur/cancel">
               </div>
 
-              <div class="form-group" style="margin-bottom:0;">
+              <div class="form-group">
                 <label for="extraKeterangan">Keterangan</label>
                 <textarea id="extraKeterangan" rows="2" placeholder="Alasan pending / retur / cancel..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Foto Produk (Kendala) <span class="opt-tag">(Opsional)</span></label>
+                <div class="photo-picker-group">
+                  <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camExtraProduk').click()">📷 Ambil Foto</button>
+                  <button type="button" class="btn-photo-opt" onclick="document.getElementById('galExtraProduk').click()">🖼️ Pilih Galeri</button>
+                </div>
+                <input type="file" id="camExtraProduk" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoSelect(this, 'extraProduk')">
+                <input type="file" id="galExtraProduk" accept="image/*" style="display:none" onchange="handlePhotoSelect(this, 'extraProduk')">
+                <div class="preview-box" id="prevBoxExtraProduk">
+                  <img id="prevImgExtraProduk" src="" alt="Preview Foto Produk Kendala">
+                  <div class="preview-caption" id="capExtraProduk">✅ Foto siap & terkompresi cepat</div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label>Foto Serah Terima <span class="opt-tag">(Opsional)</span></label>
+                <div class="photo-picker-group">
+                  <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camExtraSerahTerima').click()">📷 Ambil Foto</button>
+                  <button type="button" class="btn-photo-opt" onclick="document.getElementById('galExtraSerahTerima').click()">🖼️ Pilih Galeri</button>
+                </div>
+                <input type="file" id="camExtraSerahTerima" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoSelect(this, 'extraSerahTerima')">
+                <input type="file" id="galExtraSerahTerima" accept="image/*" style="display:none" onchange="handlePhotoSelect(this, 'extraSerahTerima')">
+                <div class="preview-box" id="prevBoxExtraSerahTerima">
+                  <img id="prevImgExtraSerahTerima" src="" alt="Preview Foto Serah Terima">
+                  <div class="preview-caption" id="capExtraSerahTerima">✅ Foto siap & terkompresi cepat</div>
+                </div>
               </div>
             </div>
 
@@ -1199,9 +1227,61 @@
             <label>Barang</label>
             <input type="text" id="editExtraBarang" placeholder="Nama & Qty barang">
           </div>
-          <div class="form-group" style="margin-bottom:0;">
+          <div class="form-group">
             <label>Keterangan</label>
             <textarea id="editExtraKeterangan" rows="2" placeholder="Alasan pending / retur / cancel..."></textarea>
+          </div>
+
+          <div class="photo-edit-grid" style="margin-bottom:0;">
+            <!-- FOTO PRODUK KENDALA -->
+            <div class="photo-card-edit" id="cardEditExtraProduk">
+              <div class="photo-card-title">📦 Foto Produk (Kendala)</div>
+              <div id="editUploadExtraProdukWrap">
+                <div class="photo-picker-group edit-only-control">
+                  <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamExtraProduk').click()">📷 Kamera</button>
+                  <button type="button" class="btn-photo-opt" onclick="document.getElementById('editGalExtraProduk').click()">🖼️ Galeri</button>
+                </div>
+                <div class="no-photo-label view-only-label" style="display:none;">Belum ada foto</div>
+              </div>
+              <div id="editExistingExtraProdukWrap" style="display:none;">
+                <button type="button" class="btn-view-photo" onclick="openPhotoPopup('extraProduk')">👁️ Lihat Foto</button>
+                <div class="photo-picker-group edit-only-control" style="margin-top:6px;">
+                  <button type="button" class="btn-replace-photo" onclick="document.getElementById('editCamExtraProduk').click()">📷 Ganti</button>
+                  <button type="button" class="btn-replace-photo" onclick="document.getElementById('editGalExtraProduk').click()">🖼️ Galeri</button>
+                </div>
+              </div>
+              <input type="file" id="editCamExtraProduk" accept="image/*" capture="environment" style="display:none" onchange="handleEditPhotoSelect(this, 'extraProduk')">
+              <input type="file" id="editGalExtraProduk" accept="image/*" style="display:none" onchange="handleEditPhotoSelect(this, 'extraProduk')">
+              <div class="preview-box" id="editPrevBoxExtraProduk">
+                <img id="editPrevImgExtraProduk" src="" alt="Preview Foto Produk Kendala Baru">
+                <div class="preview-caption" id="editCapExtraProduk">✅ Foto baru siap disimpan</div>
+              </div>
+            </div>
+
+            <!-- FOTO SERAH TERIMA -->
+            <div class="photo-card-edit" id="cardEditExtraSerahTerima">
+              <div class="photo-card-title">📝 Foto Serah Terima</div>
+              <div id="editUploadExtraSerahTerimaWrap">
+                <div class="photo-picker-group edit-only-control">
+                  <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamExtraSerahTerima').click()">📷 Kamera</button>
+                  <button type="button" class="btn-photo-opt" onclick="document.getElementById('editGalExtraSerahTerima').click()">🖼️ Galeri</button>
+                </div>
+                <div class="no-photo-label view-only-label" style="display:none;">Belum ada foto</div>
+              </div>
+              <div id="editExistingExtraSerahTerimaWrap" style="display:none;">
+                <button type="button" class="btn-view-photo" onclick="openPhotoPopup('extraSerahTerima')">👁️ Lihat Foto</button>
+                <div class="photo-picker-group edit-only-control" style="margin-top:6px;">
+                  <button type="button" class="btn-replace-photo" onclick="document.getElementById('editCamExtraSerahTerima').click()">📷 Ganti</button>
+                  <button type="button" class="btn-replace-photo" onclick="document.getElementById('editGalExtraSerahTerima').click()">🖼️ Galeri</button>
+                </div>
+              </div>
+              <input type="file" id="editCamExtraSerahTerima" accept="image/*" capture="environment" style="display:none" onchange="handleEditPhotoSelect(this, 'extraSerahTerima')">
+              <input type="file" id="editGalExtraSerahTerima" accept="image/*" style="display:none" onchange="handleEditPhotoSelect(this, 'extraSerahTerima')">
+              <div class="preview-box" id="editPrevBoxExtraSerahTerima">
+                <img id="editPrevImgExtraSerahTerima" src="" alt="Preview Foto Serah Terima Baru">
+                <div class="preview-caption" id="editCapExtraSerahTerima">✅ Foto baru siap disimpan</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1246,13 +1326,19 @@
   let allGrandMaxDetails = [];
   let base64FotoTempat = '';
   let base64FotoProduk = '';
+  let base64ExtraFotoProduk = '';
+  let base64ExtraFotoSerahTerima = '';
   let editBase64FotoTempat = '';
   let editBase64FotoProduk = '';
+  let editBase64ExtraFotoProduk = '';
+  let editBase64ExtraFotoSerahTerima = '';
   let currentLocationText = 'Lokasi GPS siap';
   let pendingUploads = 0;
 
   let currentModalFotoTempat = '';
   let currentModalFotoProduk = '';
+  let currentModalExtraFotoProduk = '';
+  let currentModalExtraFotoSerahTerima = '';
 
   const today = new Date();
   document.getElementById('tanggal').valueAsDate = today;
@@ -1598,9 +1684,16 @@
     const file = inputEl.files[0];
     if (!file) return;
 
-    const capEl = document.getElementById(type === 'tempat' ? 'capTempat' : 'capProduk');
-    const boxEl = document.getElementById(type === 'tempat' ? 'prevBoxTempat' : 'prevBoxProduk');
-    const imgEl = document.getElementById(type === 'tempat' ? 'prevImgTempat' : 'prevImgProduk');
+    const mapIds = {
+      tempat: { cap: 'capTempat', box: 'prevBoxTempat', img: 'prevImgTempat' },
+      produk: { cap: 'capProduk', box: 'prevBoxProduk', img: 'prevImgProduk' },
+      extraProduk: { cap: 'capExtraProduk', box: 'prevBoxExtraProduk', img: 'prevImgExtraProduk' },
+      extraSerahTerima: { cap: 'capExtraSerahTerima', box: 'prevBoxExtraSerahTerima', img: 'prevImgExtraSerahTerima' }
+    };
+    const ids = mapIds[type];
+    const capEl = document.getElementById(ids.cap);
+    const boxEl = document.getElementById(ids.box);
+    const imgEl = document.getElementById(ids.img);
 
     boxEl.style.display = 'block';
     capEl.textContent = '⏳ Memproses foto...';
@@ -1609,11 +1702,11 @@
     const ruteVal = document.getElementById('rute').value;
 
     processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
-      if (type === 'tempat') {
-        base64FotoTempat = stampedBase64;
-      } else {
-        base64FotoProduk = stampedBase64;
-      }
+      if (type === 'tempat') base64FotoTempat = stampedBase64;
+      else if (type === 'produk') base64FotoProduk = stampedBase64;
+      else if (type === 'extraProduk') base64ExtraFotoProduk = stampedBase64;
+      else if (type === 'extraSerahTerima') base64ExtraFotoSerahTerima = stampedBase64;
+
       imgEl.src = stampedBase64;
       capEl.textContent = '✅ Foto siap & stempel terpasang';
     });
@@ -1623,9 +1716,16 @@
     const file = inputEl.files[0];
     if (!file) return;
 
-    const capEl = document.getElementById(type === 'tempat' ? 'editCapTempat' : 'editCapProduk');
-    const boxEl = document.getElementById(type === 'tempat' ? 'editPrevBoxTempat' : 'editPrevBoxProduk');
-    const imgEl = document.getElementById(type === 'tempat' ? 'editPrevImgTempat' : 'editPrevImgProduk');
+    const mapIds = {
+      tempat: { cap: 'editCapTempat', box: 'editPrevBoxTempat', img: 'editPrevImgTempat' },
+      produk: { cap: 'editCapProduk', box: 'editPrevBoxProduk', img: 'editPrevImgProduk' },
+      extraProduk: { cap: 'editCapExtraProduk', box: 'editPrevBoxExtraProduk', img: 'editPrevImgExtraProduk' },
+      extraSerahTerima: { cap: 'editCapExtraSerahTerima', box: 'editPrevBoxExtraSerahTerima', img: 'editPrevImgExtraSerahTerima' }
+    };
+    const ids = mapIds[type];
+    const capEl = document.getElementById(ids.cap);
+    const boxEl = document.getElementById(ids.box);
+    const imgEl = document.getElementById(ids.img);
 
     boxEl.style.display = 'block';
     capEl.textContent = '⏳ Memproses foto baru...';
@@ -1634,11 +1734,11 @@
     const ruteVal = document.getElementById('editRute').value;
 
     processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
-      if (type === 'tempat') {
-        editBase64FotoTempat = stampedBase64;
-      } else {
-        editBase64FotoProduk = stampedBase64;
-      }
+      if (type === 'tempat') editBase64FotoTempat = stampedBase64;
+      else if (type === 'produk') editBase64FotoProduk = stampedBase64;
+      else if (type === 'extraProduk') editBase64ExtraFotoProduk = stampedBase64;
+      else if (type === 'extraSerahTerima') editBase64ExtraFotoSerahTerima = stampedBase64;
+
       imgEl.src = stampedBase64;
       capEl.textContent = '✅ Foto baru siap disimpan';
     });
@@ -1947,8 +2047,12 @@
 
     editBase64FotoTempat = '';
     editBase64FotoProduk = '';
+    editBase64ExtraFotoProduk = '';
+    editBase64ExtraFotoSerahTerima = '';
     document.getElementById('editPrevBoxTempat').style.display = 'none';
     document.getElementById('editPrevBoxProduk').style.display = 'none';
+    document.getElementById('editPrevBoxExtraProduk').style.display = 'none';
+    document.getElementById('editPrevBoxExtraSerahTerima').style.display = 'none';
 
     document.getElementById('editRowIndex').value = item.rowIndex;
     document.getElementById('editTanggal').value = item.tanggal;
@@ -1992,6 +2096,28 @@
     document.getElementById('editExtraNoDokumen').value = matchedDetail ? (matchedDetail.noDokumen || '') : '';
     document.getElementById('editExtraBarang').value = matchedDetail ? (matchedDetail.barang || '') : '';
     document.getElementById('editExtraKeterangan').value = matchedDetail ? (matchedDetail.keterangan || '') : '';
+
+    currentModalExtraFotoProduk = (matchedDetail && matchedDetail.fotoProduk && matchedDetail.fotoProduk.startsWith('http')) ? matchedDetail.fotoProduk : '';
+    if (currentModalExtraFotoProduk) {
+      document.getElementById('cardEditExtraProduk').classList.add('has-photo');
+      document.getElementById('editUploadExtraProdukWrap').style.display = 'none';
+      document.getElementById('editExistingExtraProdukWrap').style.display = 'block';
+    } else {
+      document.getElementById('cardEditExtraProduk').classList.remove('has-photo');
+      document.getElementById('editUploadExtraProdukWrap').style.display = 'block';
+      document.getElementById('editExistingExtraProdukWrap').style.display = 'none';
+    }
+
+    currentModalExtraFotoSerahTerima = (matchedDetail && matchedDetail.fotoSerahTerima && matchedDetail.fotoSerahTerima.startsWith('http')) ? matchedDetail.fotoSerahTerima : '';
+    if (currentModalExtraFotoSerahTerima) {
+      document.getElementById('cardEditExtraSerahTerima').classList.add('has-photo');
+      document.getElementById('editUploadExtraSerahTerimaWrap').style.display = 'none';
+      document.getElementById('editExistingExtraSerahTerimaWrap').style.display = 'block';
+    } else {
+      document.getElementById('cardEditExtraSerahTerima').classList.remove('has-photo');
+      document.getElementById('editUploadExtraSerahTerimaWrap').style.display = 'block';
+      document.getElementById('editExistingExtraSerahTerimaWrap').style.display = 'none';
+    }
     toggleEditExtraStatusForm();
 
     currentModalFotoTempat = (item.fotoTempat && item.fotoTempat.startsWith('http')) ? item.fotoTempat : '';
@@ -2037,14 +2163,26 @@
   }
 
   function openPhotoPopup(type) {
-    const url = type === 'tempat' ? currentModalFotoTempat : currentModalFotoProduk;
+    const urlMap = {
+      tempat: currentModalFotoTempat,
+      produk: currentModalFotoProduk,
+      extraProduk: currentModalExtraFotoProduk,
+      extraSerahTerima: currentModalExtraFotoSerahTerima
+    };
+    const titleMap = {
+      tempat: '📸 Foto Tempat Pengiriman',
+      produk: '📦 Foto Produk Pengiriman',
+      extraProduk: '📦 Foto Produk (Kendala)',
+      extraSerahTerima: '📝 Foto Serah Terima'
+    };
+    const url = urlMap[type];
     if (!url) return;
 
     const titleEl = document.getElementById('photoPopupTitle');
     const imgEl = document.getElementById('photoPopupImg');
     const dlLink = document.getElementById('photoDownloadLink');
 
-    titleEl.textContent = type === 'tempat' ? '📸 Foto Tempat Pengiriman' : '📦 Foto Produk Pengiriman';
+    titleEl.textContent = titleMap[type] || '📸 Preview Foto';
 
     const fileId = extractDriveFileId(url);
     if (fileId) {
@@ -2100,7 +2238,9 @@
         customer: ruteVal,
         noDokumen: document.getElementById('editExtraNoDokumen').value,
         barang: document.getElementById('editExtraBarang').value,
-        keterangan: document.getElementById('editExtraKeterangan').value
+        keterangan: document.getElementById('editExtraKeterangan').value,
+        fotoProduk: editBase64ExtraFotoProduk || '',
+        fotoSerahTerima: editBase64ExtraFotoSerahTerima || ''
       } : null,
       grandMaxDetail: isGrandMax ? {
         gmRowIndex: gmRowIndex ? parseInt(gmRowIndex) : null,
@@ -2194,7 +2334,9 @@
         customer: ruteVal,
         noDokumen: document.getElementById('extraNoDokumen').value,
         barang: document.getElementById('extraBarang').value,
-        keterangan: document.getElementById('extraKeterangan').value
+        keterangan: document.getElementById('extraKeterangan').value,
+        fotoProduk: base64ExtraFotoProduk || '',
+        fotoSerahTerima: base64ExtraFotoSerahTerima || ''
       } : null,
       grandMaxDetail: isGrandMax ? {
         armada: armadaVal,
@@ -2242,8 +2384,12 @@
 
     base64FotoTempat = '';
     base64FotoProduk = '';
+    base64ExtraFotoProduk = '';
+    base64ExtraFotoSerahTerima = '';
     document.getElementById('prevBoxTempat').style.display = 'none';
     document.getElementById('prevBoxProduk').style.display = 'none';
+    document.getElementById('prevBoxExtraProduk').style.display = 'none';
+    document.getElementById('prevBoxExtraSerahTerima').style.display = 'none';
 
     msg.className = 'status-msg success';
     msg.textContent = '⚡ Laporan tercatat! Lanjutkan pengisian berikutnya di Halaman 2 saat tiba di lokasi.';
