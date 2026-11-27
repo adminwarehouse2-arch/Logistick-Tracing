@@ -870,76 +870,81 @@
     }
 
 
-    .photo-grid-3 {
+    .photo-grid-4 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
     }
-    .photo-slot-3 {
+    .photo-slot-4 {
       background: #f8fafc;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 8px 6px;
+      padding: 7px 5px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
-    .photo-slot-title-3 {
-      font-size: 11px;
+    .photo-slot-title-4 {
+      font-size: 10.5px;
       font-weight: 800;
       color: var(--gr-black);
       text-align: center;
-      line-height: 1.25;
+      line-height: 1.2;
     }
-    .photo-picker-3 {
+    .photo-picker-4 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4px;
-    }
-    .photo-picker-3 .btn-photo-opt {
-      padding: 7px 4px;
-      font-size: 10.5px;
       gap: 3px;
     }
-    .photo-edit-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .photo-edit-grid-3 .photo-card-edit {
-      padding: 8px 6px;
-      gap: 6px;
-    }
-    .photo-edit-grid-3 .photo-card-title {
-      font-size: 11px;
-      line-height: 1.25;
-    }
-    .photo-edit-grid-3 .photo-picker-group {
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-    }
-    .photo-edit-grid-3 .btn-photo-opt {
-      padding: 6px 4px;
-      font-size: 10px;
+    .photo-picker-4 .btn-photo-opt {
+      padding: 6px 3px;
+      font-size: 9.5px;
       gap: 2px;
     }
-    .photo-edit-grid-3 .btn-view-photo {
-      padding: 6px 6px;
+    .photo-edit-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .photo-edit-grid-4 .photo-card-edit {
+      padding: 7px 5px;
+      gap: 5px;
+    }
+    .photo-edit-grid-4 .photo-card-title {
       font-size: 10.5px;
+      line-height: 1.2;
     }
-    .photo-edit-grid-3 .btn-replace-photo {
-      padding: 5px 3px;
+    .photo-edit-grid-4 .photo-picker-group {
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+    .photo-edit-grid-4 .btn-photo-opt {
+      padding: 6px 3px;
       font-size: 9.5px;
+      gap: 2px;
     }
-    @media (max-width: 560px) {
-      .photo-grid-3, .photo-edit-grid-3 {
-        grid-template-columns: 1fr;
+    .photo-edit-grid-4 .btn-view-photo {
+      padding: 6px 4px;
+      font-size: 10px;
+    }
+    .photo-edit-grid-4 .btn-replace-photo {
+      padding: 5px 2px;
+      font-size: 9px;
+    }
+    @media (max-width: 640px) {
+      .photo-grid-4, .photo-edit-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
       }
-      .photo-picker-3 .btn-photo-opt,
-      .photo-edit-grid-3 .btn-photo-opt {
-        font-size: 12px;
-        padding: 8px 6px;
+      .photo-picker-4 .btn-photo-opt,
+      .photo-edit-grid-4 .btn-photo-opt {
+        font-size: 11px;
+        padding: 7px 5px;
+      }
+    }
+    @media (max-width: 400px) {
+      .photo-grid-4, .photo-edit-grid-4 {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1206,14 +1211,14 @@
               </div>
             </div>
 
-            <!-- BAGIAN DI BAWAH INI TIDAK WAJIB DIISI SAAT AWAL (3 FOTO BERJEJER) -->
+            <!-- BAGIAN DI BAWAH INI TIDAK WAJIB DIISI SAAT AWAL (4 FOTO BERJEJER SESUAI URUTAN SHEET) -->
             <div class="form-group">
-              <label>Dokumentasi Foto Pengiriman (3 Foto Berjejer) <span class="opt-tag">(Opsional di awal, bisa dilengkapi di Halaman 2)</span></label>
-              <div class="photo-grid-3">
+              <label>Dokumentasi Foto Pengiriman (4 Foto Berjejer) <span class="opt-tag">(Opsional di awal, bisa dilengkapi di Halaman 2)</span></label>
+              <div class="photo-grid-4">
                 <!-- 1. FOTO TEMPAT -->
-                <div class="photo-slot-3">
-                  <div class="photo-slot-title-3">1. Foto Tempat</div>
-                  <div class="photo-picker-3">
+                <div class="photo-slot-4">
+                  <div class="photo-slot-title-4">1. Foto Tempat</div>
+                  <div class="photo-picker-4">
                     <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camTempat').click()">📷 Foto</button>
                     <button type="button" class="btn-photo-opt" onclick="document.getElementById('galTempat').click()">🖼️ Galeri</button>
                   </div>
@@ -1226,9 +1231,9 @@
                 </div>
 
                 <!-- 2. FOTO PRODUK -->
-                <div class="photo-slot-3">
-                  <div class="photo-slot-title-3">2. Foto Produk</div>
-                  <div class="photo-picker-3">
+                <div class="photo-slot-4">
+                  <div class="photo-slot-title-4">2. Foto Produk</div>
+                  <div class="photo-picker-4">
                     <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camProduk').click()">📷 Foto</button>
                     <button type="button" class="btn-photo-opt" onclick="document.getElementById('galProduk').click()">🖼️ Galeri</button>
                   </div>
@@ -1240,10 +1245,25 @@
                   </div>
                 </div>
 
-                <!-- 3. FOTO SERAH TERIMA -->
-                <div class="photo-slot-3">
-                  <div class="photo-slot-title-3">3. Foto Serah Terima</div>
-                  <div class="photo-picker-3">
+                <!-- 3. FOTO SURAT JALAN -->
+                <div class="photo-slot-4">
+                  <div class="photo-slot-title-4">3. Foto Surat Jalan</div>
+                  <div class="photo-picker-4">
+                    <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camSuratJalan').click()">📷 Foto</button>
+                    <button type="button" class="btn-photo-opt" onclick="document.getElementById('galSuratJalan').click()">🖼️ Galeri</button>
+                  </div>
+                  <input type="file" id="camSuratJalan" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoSelect(this, 'suratJalan')">
+                  <input type="file" id="galSuratJalan" accept="image/*" style="display:none" onchange="handlePhotoSelect(this, 'suratJalan')">
+                  <div class="preview-box" id="prevBoxSuratJalan">
+                    <img id="prevImgSuratJalan" src="" alt="Preview Foto Surat Jalan">
+                    <div class="preview-caption" id="capSuratJalan">✅ Siap</div>
+                  </div>
+                </div>
+
+                <!-- 4. FOTO SERAH TERIMA -->
+                <div class="photo-slot-4">
+                  <div class="photo-slot-title-4">4. Foto Serah Terima</div>
+                  <div class="photo-picker-4">
                     <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('camSerahTerima').click()">📷 Foto</button>
                     <button type="button" class="btn-photo-opt" onclick="document.getElementById('galSerahTerima').click()">🖼️ Galeri</button>
                   </div>
@@ -1417,8 +1437,8 @@
         <input type="hidden" id="editRowIndex">
         <input type="hidden" id="editGmRowIndex">
         
-        <!-- BAGIAN 3 FOTO BERJEJER DI HALAMAN 2 (FOTO TEMPAT, FOTO PRODUK, FOTO SERAH TERIMA) -->
-        <div class="photo-edit-grid-3">
+        <!-- BAGIAN 4 FOTO BERJEJER DI HALAMAN 2 SESUAI URUTAN SHEET (TEMPAT, PRODUK, SURAT JALAN, SERAH TERIMA) -->
+        <div class="photo-edit-grid-4">
           <!-- 1. FOTO TEMPAT -->
           <div class="photo-card-edit" id="cardEditTempat">
             <div class="photo-card-title">📸 1. Foto Tempat</div>
@@ -1475,9 +1495,37 @@
             </div>
           </div>
 
-          <!-- 3. FOTO SERAH TERIMA -->
+          <!-- 3. FOTO SURAT JALAN -->
+          <div class="photo-card-edit" id="cardEditSuratJalan">
+            <div class="photo-card-title">📄 3. Foto Surat Jalan</div>
+            
+            <div id="editUploadSuratJalanWrap">
+              <div class="photo-picker-group edit-only-control">
+                <button type="button" class="btn-photo-opt btn-camera" onclick="document.getElementById('editCamSuratJalan').click()">📷 Foto</button>
+                <button type="button" class="btn-photo-opt" onclick="document.getElementById('editGalSuratJalan').click()">🖼️ Galeri</button>
+              </div>
+              <div class="no-photo-label view-only-label" style="display:none;">Belum ada foto</div>
+            </div>
+
+            <div id="editExistingSuratJalanWrap" style="display:none;">
+              <button type="button" class="btn-view-photo" onclick="openPhotoPopup('suratJalan')">👁️ Lihat</button>
+              <div class="photo-picker-group edit-only-control" style="margin-top:6px;">
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editCamSuratJalan').click()">📷 Ganti</button>
+                <button type="button" class="btn-replace-photo" onclick="document.getElementById('editGalSuratJalan').click()">🖼️ Galeri</button>
+              </div>
+            </div>
+
+            <input type="file" id="editCamSuratJalan" accept="image/*" capture="environment" style="display:none" onchange="handleEditPhotoSelect(this, 'suratJalan')">
+            <input type="file" id="editGalSuratJalan" accept="image/*" style="display:none" onchange="handleEditPhotoSelect(this, 'suratJalan')">
+            <div class="preview-box" id="editPrevBoxSuratJalan">
+              <img id="editPrevImgSuratJalan" src="" alt="Preview Foto Surat Jalan Baru">
+              <div class="preview-caption" id="editCapSuratJalan">✅ Foto baru siap</div>
+            </div>
+          </div>
+
+          <!-- 4. FOTO SERAH TERIMA -->
           <div class="photo-card-edit" id="cardEditSerahTerima">
-            <div class="photo-card-title">📝 3. Foto Serah Terima</div>
+            <div class="photo-card-title">📝 4. Foto Serah Terima</div>
             
             <div id="editUploadSerahTerimaWrap">
               <div class="photo-picker-group edit-only-control">
@@ -1745,11 +1793,13 @@
   let allGrandMaxDetails = [];
   let base64FotoTempat = '';
   let base64FotoProduk = '';
+  let base64FotoSuratJalan = '';
   let base64FotoSerahTerima = '';
   let base64ExtraFotoProduk = '';
   let base64ExtraFotoSerahTerima = '';
   let editBase64FotoTempat = '';
   let editBase64FotoProduk = '';
+  let editBase64FotoSuratJalan = '';
   let editBase64FotoSerahTerima = '';
   let editBase64ExtraFotoProduk = '';
   let editBase64ExtraFotoSerahTerima = '';
@@ -1758,6 +1808,7 @@
 
   let currentModalFotoTempat = '';
   let currentModalFotoProduk = '';
+  let currentModalFotoSuratJalan = '';
   let currentModalFotoSerahTerima = '';
   let currentModalExtraFotoProduk = '';
   let currentModalExtraFotoSerahTerima = '';
@@ -2109,6 +2160,7 @@
     const mapIds = {
       tempat: { cap: 'capTempat', box: 'prevBoxTempat', img: 'prevImgTempat' },
       produk: { cap: 'capProduk', box: 'prevBoxProduk', img: 'prevImgProduk' },
+      suratJalan: { cap: 'capSuratJalan', box: 'prevBoxSuratJalan', img: 'prevImgSuratJalan' },
       serahTerima: { cap: 'capSerahTerima', box: 'prevBoxSerahTerima', img: 'prevImgSerahTerima' },
       extraProduk: { cap: 'capExtraProduk', box: 'prevBoxExtraProduk', img: 'prevImgExtraProduk' },
       extraSerahTerima: { cap: 'capExtraSerahTerima', box: 'prevBoxExtraSerahTerima', img: 'prevImgExtraSerahTerima' }
@@ -2127,6 +2179,7 @@
     processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
       if (type === 'tempat') base64FotoTempat = stampedBase64;
       else if (type === 'produk') base64FotoProduk = stampedBase64;
+      else if (type === 'suratJalan') base64FotoSuratJalan = stampedBase64;
       else if (type === 'serahTerima') base64FotoSerahTerima = stampedBase64;
       else if (type === 'extraProduk') base64ExtraFotoProduk = stampedBase64;
       else if (type === 'extraSerahTerima') base64ExtraFotoSerahTerima = stampedBase64;
@@ -2143,6 +2196,7 @@
     const mapIds = {
       tempat: { cap: 'editCapTempat', box: 'editPrevBoxTempat', img: 'editPrevImgTempat' },
       produk: { cap: 'editCapProduk', box: 'editPrevBoxProduk', img: 'editPrevImgProduk' },
+      suratJalan: { cap: 'editCapSuratJalan', box: 'editPrevBoxSuratJalan', img: 'editPrevImgSuratJalan' },
       serahTerima: { cap: 'editCapSerahTerima', box: 'editPrevBoxSerahTerima', img: 'editPrevImgSerahTerima' },
       extraProduk: { cap: 'editCapExtraProduk', box: 'editPrevBoxExtraProduk', img: 'editPrevImgExtraProduk' },
       extraSerahTerima: { cap: 'editCapExtraSerahTerima', box: 'editPrevBoxExtraSerahTerima', img: 'editPrevImgExtraSerahTerima' }
@@ -2161,6 +2215,7 @@
     processPhotoWithStamp(file, armadaVal, ruteVal, (stampedBase64) => {
       if (type === 'tempat') editBase64FotoTempat = stampedBase64;
       else if (type === 'produk') editBase64FotoProduk = stampedBase64;
+      else if (type === 'suratJalan') editBase64FotoSuratJalan = stampedBase64;
       else if (type === 'serahTerima') editBase64FotoSerahTerima = stampedBase64;
       else if (type === 'extraProduk') editBase64ExtraFotoProduk = stampedBase64;
       else if (type === 'extraSerahTerima') editBase64ExtraFotoSerahTerima = stampedBase64;
@@ -2577,11 +2632,13 @@
 
     editBase64FotoTempat = '';
     editBase64FotoProduk = '';
+    editBase64FotoSuratJalan = '';
     editBase64FotoSerahTerima = '';
     editBase64ExtraFotoProduk = '';
     editBase64ExtraFotoSerahTerima = '';
     document.getElementById('editPrevBoxTempat').style.display = 'none';
     document.getElementById('editPrevBoxProduk').style.display = 'none';
+    document.getElementById('editPrevBoxSuratJalan').style.display = 'none';
     document.getElementById('editPrevBoxSerahTerima').style.display = 'none';
     document.getElementById('editPrevBoxExtraProduk').style.display = 'none';
     document.getElementById('editPrevBoxExtraSerahTerima').style.display = 'none';
@@ -2671,6 +2728,18 @@
       document.getElementById('editExistingProdukWrap').style.display = 'none';
     }
 
+    const rawSuratJalan = item.fotoSuratJalan || '';
+    currentModalFotoSuratJalan = (rawSuratJalan && rawSuratJalan.startsWith('http')) ? rawSuratJalan : '';
+    if (currentModalFotoSuratJalan) {
+      document.getElementById('cardEditSuratJalan').classList.add('has-photo');
+      document.getElementById('editUploadSuratJalanWrap').style.display = 'none';
+      document.getElementById('editExistingSuratJalanWrap').style.display = 'block';
+    } else {
+      document.getElementById('cardEditSuratJalan').classList.remove('has-photo');
+      document.getElementById('editUploadSuratJalanWrap').style.display = 'block';
+      document.getElementById('editExistingSuratJalanWrap').style.display = 'none';
+    }
+
     const rawSerahTerima = item.fotoSerahTerima || (matchedDetail && matchedDetail.fotoSerahTerima) || '';
     currentModalFotoSerahTerima = (rawSerahTerima && rawSerahTerima.startsWith('http')) ? rawSerahTerima : '';
     if (currentModalFotoSerahTerima) {
@@ -2708,6 +2777,7 @@
     const urlMap = {
       tempat: currentModalFotoTempat,
       produk: currentModalFotoProduk,
+      suratJalan: currentModalFotoSuratJalan,
       serahTerima: currentModalFotoSerahTerima,
       extraProduk: currentModalExtraFotoProduk,
       extraSerahTerima: currentModalExtraFotoSerahTerima
@@ -2715,6 +2785,7 @@
     const titleMap = {
       tempat: '📸 Foto Tempat Pengiriman',
       produk: '📦 Foto Produk Pengiriman',
+      suratJalan: '📄 Foto Surat Jalan Pengiriman',
       serahTerima: '📝 Foto Serah Terima Pengiriman',
       extraProduk: '📦 Foto Produk (Kendala)',
       extraSerahTerima: '📝 Foto Serah Terima'
@@ -2776,6 +2847,8 @@
       status2: status2Val,
       fotoTempatBaru: editBase64FotoTempat || '',
       fotoProdukBaru: editBase64FotoProduk || '',
+      fotoSuratJalanBaru: editBase64FotoSuratJalan || '',
+      fotoSuratJalan: editBase64FotoSuratJalan || currentModalFotoSuratJalan || '',
       fotoSerahTerimaBaru: editBase64FotoSerahTerima || '',
       fotoSerahTerima: editBase64FotoSerahTerima || currentModalFotoSerahTerima || '',
       extraDetail: kendalaText ? {
@@ -2870,6 +2943,7 @@
       eta: etaVal,
       fotoTempat: base64FotoTempat || '',
       fotoProduk: base64FotoProduk || '',
+      fotoSuratJalan: base64FotoSuratJalan || '',
       fotoSerahTerima: base64FotoSerahTerima || '',
       etd: etdVal,
       suhu: suhuVal,
@@ -2907,6 +2981,7 @@
       eta: etaVal,
       fotoTempat: '',
       fotoProduk: '',
+      fotoSuratJalan: '',
       fotoSerahTerima: '',
       etd: etdVal,
       suhu: suhuVal,
@@ -2934,11 +3009,13 @@
 
     base64FotoTempat = '';
     base64FotoProduk = '';
+    base64FotoSuratJalan = '';
     base64FotoSerahTerima = '';
     base64ExtraFotoProduk = '';
     base64ExtraFotoSerahTerima = '';
     document.getElementById('prevBoxTempat').style.display = 'none';
     document.getElementById('prevBoxProduk').style.display = 'none';
+    document.getElementById('prevBoxSuratJalan').style.display = 'none';
     document.getElementById('prevBoxSerahTerima').style.display = 'none';
     document.getElementById('prevBoxExtraProduk').style.display = 'none';
     document.getElementById('prevBoxExtraSerahTerima').style.display = 'none';
